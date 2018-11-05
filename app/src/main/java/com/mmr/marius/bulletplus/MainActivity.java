@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -20,10 +21,13 @@ public class MainActivity extends AppCompatActivity {
     private CollectionReference mNotebookRef = db.collection("Notebook");
 
     private NoteAdapter mAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        startActivity(new Intent(MainActivity.this, AuthActivity.class));
 
         FloatingActionButton mButtonAddNote = findViewById(R.id.button_add_note);
         mButtonAddNote.setOnClickListener(new View.OnClickListener() {
