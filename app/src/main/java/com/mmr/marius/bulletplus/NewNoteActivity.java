@@ -2,6 +2,7 @@ package com.mmr.marius.bulletplus;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -9,6 +10,8 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -17,6 +20,9 @@ public class NewNoteActivity extends AppCompatActivity {
     private EditText mEditTextTitle;
     private EditText mEditTextDescription;
     private NumberPicker mNumberPickerPriority;
+
+
+    private final static String TAG = "com.marius.newnote";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
