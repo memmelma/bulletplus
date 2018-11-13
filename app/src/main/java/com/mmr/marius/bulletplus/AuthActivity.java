@@ -1,5 +1,6 @@
 package com.mmr.marius.bulletplus;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -77,6 +78,9 @@ public class AuthActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(AuthActivity.this, "Authentication success.",
                                     Toast.LENGTH_SHORT).show();
+
+                            Intent resultIntent = new Intent();
+                            setResult(Activity.RESULT_OK, resultIntent);
                             finish();
                             //updateUI(user);
                         } else {

@@ -19,20 +19,23 @@ import com.google.firebase.firestore.Query;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "com.marius.main";
-
+    private final static String TAG = "com.marius.main";
+    private final static int REQUEST_CODE_AUTH = 42;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference mNotebookRef = db.collection("Notebook");
+
+    private boolean registered = false;
 
     private NoteAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent i = new Intent(MainActivity.this, AuthActivity.class);
+        startActivityForResult(i, REQUEST_CODE_AUTH);
+
         setContentView(R.layout.activity_main);
-
-        startActivity(new Intent(MainActivity.this, AuthActivity.class));
-
         FloatingActionButton mButtonAddNote = findViewById(R.id.button_add_note);
         mButtonAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,7 +43,18 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, NewNoteActivity.class));
             }
         });
-        setUpRecyclerView();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(requestCode) {
+            case REQUEST_CODE_AUTH:
+                //you just got back from activity B - deal with resultCode
+                //use data.getExtra(...) to retrieve the returned data
+                registered = true;
+                setUpRecyclerView();
+                break;
+        }
     }
 
     private void setUpRecyclerView() {
@@ -67,12 +81,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
+        if(registered)
         mAdapter.startListening();
     }
 
     @Override
     protected void onStop(){
         super.onStop();
+        if(registered)
         mAdapter.stopListening();
     }
 }
