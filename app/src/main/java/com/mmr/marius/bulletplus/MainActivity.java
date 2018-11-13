@@ -1,6 +1,7 @@
 package com.mmr.marius.bulletplus;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
             case REQUEST_CODE_AUTH:
                 //you just got back from activity B - deal with resultCode
                 //use data.getExtra(...) to retrieve the returned data
+
+
                 registered = true;
                 setUpRecyclerView();
                 break;

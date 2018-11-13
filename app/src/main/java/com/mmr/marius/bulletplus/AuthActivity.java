@@ -2,6 +2,7 @@ package com.mmr.marius.bulletplus;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,6 +30,10 @@ public class AuthActivity extends AppCompatActivity {
     private Button mEmailSignInButton;
     private Button mEmailRegisterButton;
 
+    private SharedPreferences loginDetails;
+    private SharedPreferences.Editor loginDetailsEditor;
+    //private Boolean saveLogin //checkbox
+
     //TODO FIX empty email and password make app crash
 
     @Override
@@ -52,6 +57,10 @@ public class AuthActivity extends AppCompatActivity {
                 String email = mEmail.getText().toString();
                 String password = mPassword.getText().toString();
 
+                loginDetailsEditor.putString("email", email);
+                loginDetailsEditor.putString("password", password);
+                loginDetailsEditor.commit();
+
                 Log.i(TAG, email + " - " + password);
 
                 signIn(email, password);
@@ -65,6 +74,17 @@ public class AuthActivity extends AppCompatActivity {
                 startActivity(new Intent(AuthActivity.this, RegisterActivity.class));
             }
         });
+
+        loginDetails = getSharedPreferences("loginDetails", MODE_PRIVATE);
+        loginDetailsEditor = loginDetails.edit();
+
+        String email = loginDetails.getString("email", "");
+        String password = loginDetails.getString("password", "");
+
+        if(email != "" && password != ""){
+            signIn(email,password);
+        }
+
     }
 
     private void signIn(String email, String password){
@@ -80,6 +100,8 @@ public class AuthActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
 
                             Intent resultIntent = new Intent();
+                            //resultIntent.putExtra("email", email);
+
                             setResult(Activity.RESULT_OK, resultIntent);
                             finish();
                             //updateUI(user);
@@ -88,6 +110,8 @@ public class AuthActivity extends AppCompatActivity {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(AuthActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
+
+                            signOut();
                             //updateUI(null);
                         }
 
@@ -96,7 +120,10 @@ public class AuthActivity extends AppCompatActivity {
                 });
     }
 
+    //TODO add signOut button
     private void signOut(){
         mAuth.signOut();
+        loginDetailsEditor.clear();
+        loginDetailsEditor.commit();
     }
 }
