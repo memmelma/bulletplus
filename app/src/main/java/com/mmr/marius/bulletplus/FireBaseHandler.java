@@ -17,12 +17,19 @@ public class FireBaseHandler {
     }
 
     public void addShortTermGoal(ShortTermGoal stg){
-        getCollectionReference("short_term_goals").add(stg);
+        getShortTermGoals().add(stg);
+    }
+
+    public CollectionReference getShortTermGoals(){
+        return getCollectionReference("long_term_goals");
     }
 
     public void addLongTermGoal(LongTermGoal ltg){
-        Log.i(TAG, ltg.toString());
-        getCollectionReference("long_term_goals").add(ltg);
+        getLongTermGoals().add(ltg);
+    }
+
+    public CollectionReference getLongTermGoals(){
+        return getCollectionReference("short_term_goals");
     }
 
     public void addUser(User  user){
@@ -40,7 +47,7 @@ public class FireBaseHandler {
         return getUser().getUid();
     }
 
-    public CollectionReference getCollectionReference(String collectionName){
+    private CollectionReference getCollectionReference(String collectionName){
         return FirebaseFirestore.getInstance().collection(collectionName);
     }
 

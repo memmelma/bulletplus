@@ -21,6 +21,7 @@ public class NewNoteActivity extends AppCompatActivity {
     private EditText mEditTextDescription;
     private NumberPicker mNumberPickerPriority;
 
+    //TODO add long term and short term switch
 
     private final static String TAG = "com.marius.newnote";
 

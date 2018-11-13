@@ -23,11 +23,14 @@ public class MainActivity extends AppCompatActivity {
     private final static String TAG = "com.marius.main";
     private final static int REQUEST_CODE_AUTH = 42;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference mNotebookRef = db.collection("Notebook");
+    //private CollectionReference mNotebookRef = db.collection("Notebook");
 
-    private boolean registered = false;
+    private boolean authComplete = false;
 
-    private NoteAdapter mAdapter;
+    private GoalAdapterLongTerm mAdapterLongTerm;
+    private GoalAdapterShortTerm mAdapterShortTerm;
+
+    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,48 +53,76 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(requestCode) {
             case REQUEST_CODE_AUTH:
-                //you just got back from activity B - deal with resultCode
                 //use data.getExtra(...) to retrieve the returned data
-
-
-                registered = true;
-                setUpRecyclerView();
+                authComplete = true;
+                uid = new FireBaseHandler().getUserID();
+                setUpRecyclerViews();
                 break;
         }
     }
 
-    private void setUpRecyclerView() {
+    private void setUpRecyclerViews(){
+        setUpRecyclerViewLongTermGoals();
+        setUpRecyclerViewShortTermGoals();
+    }
 
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
-        String uid = user.getUid();
+    private void setUpRecyclerViewLongTermGoals() {
 
-        Query query = mNotebookRef.whereEqualTo("uid", uid).orderBy("priority", Query.Direction.DESCENDING);
+        Log.i(TAG, uid);
+        Query query = new FireBaseHandler().getLongTermGoals()
+                .whereEqualTo("user_Id", uid);//.orderBy("created", Query.Direction.DESCENDING);
 
-        FirestoreRecyclerOptions<Note> options = new FirestoreRecyclerOptions.Builder<Note>()
-                .setQuery(query, Note.class)
+        FirestoreRecyclerOptions<LongTermGoal> options = new FirestoreRecyclerOptions.Builder<LongTermGoal>()
+                .setQuery(query, LongTermGoal.class)
                 .build();
 
-        mAdapter = new NoteAdapter(options);
+        mAdapterLongTerm = new GoalAdapterLongTerm(options);
 
-        RecyclerView mRecyclerView = findViewById(R.id.recycler_view);
+        RecyclerView mRecyclerView = findViewById(R.id.recycler_view_long_term);
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(mAdapterLongTerm);
+
+        mAdapterLongTerm.startListening();
+    }
+
+    private void setUpRecyclerViewShortTermGoals(){
+
+        Query query = new FireBaseHandler().getShortTermGoals()
+                .whereEqualTo("user_Id", uid);//.orderBy("created", Query.Direction.DESCENDING);
+
+        FirestoreRecyclerOptions<ShortTermGoal> options = new FirestoreRecyclerOptions.Builder<ShortTermGoal>()
+                .setQuery(query, ShortTermGoal.class)
+                .build();
+
+        mAdapterShortTerm = new GoalAdapterShortTerm(options);
+
+        RecyclerView mRecyclerView = findViewById(R.id.recycler_view_short_term);
+
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(mAdapterShortTerm);
+
+        mAdapterShortTerm.startListening();
     }
 
     @Override
     protected void onStart(){
         super.onStart();
-        if(registered)
-        mAdapter.startListening();
+        if(authComplete) {
+            mAdapterShortTerm.startListening();
+            mAdapterLongTerm.startListening();
+        }
     }
 
     @Override
     protected void onStop(){
         super.onStop();
-        if(registered)
-        mAdapter.stopListening();
+        if(authComplete){
+            mAdapterShortTerm.stopListening();
+            mAdapterLongTerm.stopListening();
+        }
+
     }
 }
