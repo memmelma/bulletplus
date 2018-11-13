@@ -1,6 +1,7 @@
 package com.mmr.marius.bulletplus;
 
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +38,9 @@ public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, 
     public GoalHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v  = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.goal_item,
                 viewGroup, false);
+
+        CardView mCardView = v.findViewById(R.id.card_view);
+        mCardView.setBackgroundColor(v.findViewById(R.id.card_view).getResources().getColor(R.color.colorAccent));
 
         return new GoalHolder(v);
     }

@@ -2,6 +2,7 @@ package com.mmr.marius.bulletplus;
 
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,9 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
         View v  = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.goal_item,
                 viewGroup, false);
 
+        CardView mCardView = v.findViewById(R.id.card_view);
+        mCardView.setBackgroundColor(v.findViewById(R.id.card_view).getResources().getColor(R.color.colorPrimary));
+
         return new GoalAdapterShortTerm.GoalHolder(v);
     }
 
@@ -55,7 +59,6 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
             mTextViewCreated = v.findViewById(R.id.text_view_created);
             mTextViewCategory1 = v.findViewById(R.id.text_view_category_1);
             mTextViewCategory2 = v.findViewById(R.id.text_view_category_2);
-
         }
     }
 }
