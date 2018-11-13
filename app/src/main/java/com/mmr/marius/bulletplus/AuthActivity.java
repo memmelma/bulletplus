@@ -36,6 +36,7 @@ public class AuthActivity extends AppCompatActivity {
 
     //TODO FIX empty email and password make app crash
 
+    //TODO fix register and pop up of sign in screen when already signed in (move sign in methode and inflate only if failed)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
