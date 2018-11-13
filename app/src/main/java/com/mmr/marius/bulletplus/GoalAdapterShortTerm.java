@@ -29,7 +29,7 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
     @Override
     protected void onBindViewHolder(@NonNull GoalAdapterShortTerm.GoalHolder holder, int position, @NonNull ShortTermGoal model) {
         holder.mTextViewTitle.setText(model.getTitle());
-        holder.mTextViewCreated.setText(new SimpleDateFormat("yyyy-MM-dd").format(model.getCreated()));
+        //holder.mTextViewCreated.setText(new SimpleDateFormat("yyyy-MM-dd").format(model.getCreated()));
         holder.mTextViewCategory1.setText(model.getCategory_1());
         holder.mTextViewCategory2.setText(model.getCategory_2());
     }
@@ -41,7 +41,7 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
                 viewGroup, false);
 
         CardView mCardView = v.findViewById(R.id.card_view);
-        mCardView.setBackgroundColor(v.findViewById(R.id.card_view).getResources().getColor(R.color.colorPrimary));
+        mCardView.setBackgroundColor(v.findViewById(R.id.card_view).getResources().getColor(R.color.colorLowerGoal));
 
         return new GoalAdapterShortTerm.GoalHolder(v);
     }
@@ -56,7 +56,7 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
         public GoalHolder(View v) {
             super(v);
             mTextViewTitle = v.findViewById(R.id.text_view_title);
-            mTextViewCreated = v.findViewById(R.id.text_view_created);
+            //mTextViewCreated = v.findViewById(R.id.text_view_created);
             mTextViewCategory1 = v.findViewById(R.id.text_view_category_1);
             mTextViewCategory2 = v.findViewById(R.id.text_view_category_2);
         }

@@ -21,7 +21,7 @@ public class FireBaseHandler {
     }
 
     public CollectionReference getShortTermGoals(){
-        return getCollectionReference("long_term_goals");
+        return getCollectionReference("short_term_goals");
     }
 
     public void addLongTermGoal(LongTermGoal ltg){
@@ -29,7 +29,7 @@ public class FireBaseHandler {
     }
 
     public CollectionReference getLongTermGoals(){
-        return getCollectionReference("short_term_goals");
+        return getCollectionReference("long_term_goals");
     }
 
     public void addUser(User  user){

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="8dp"
-    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
     android:layout_marginRight="8dp">
 
     <LinearLayout
@@ -22,8 +22,9 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="Title"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
+        <!--
         <TextView
             android:id="@+id/text_view_created"
             android:layout_width="wrap_content"
@@ -33,6 +34,7 @@
             android:maxLines="1"
             android:text="Title"
             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+        -->
 
         <LinearLayout
             android:layout_width="match_parent"

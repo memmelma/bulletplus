@@ -3,6 +3,7 @@ package com.mmr.marius.bulletplus;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -36,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
 
         Intent i = new Intent(MainActivity.this, AuthActivity.class);
         startActivityForResult(i, REQUEST_CODE_AUTH);
@@ -71,7 +75,9 @@ public class MainActivity extends AppCompatActivity {
 
         Log.i(TAG, uid);
         Query query = new FireBaseHandler().getLongTermGoals()
-                .whereEqualTo("user_Id", uid);//.orderBy("created", Query.Direction.DESCENDING);
+                .whereEqualTo("user_Id", uid)
+                .whereEqualTo("done_flag", false)
+                .orderBy("created", Query.Direction.DESCENDING);
 
         FirestoreRecyclerOptions<LongTermGoal> options = new FirestoreRecyclerOptions.Builder<LongTermGoal>()
                 .setQuery(query, LongTermGoal.class)
@@ -91,8 +97,10 @@ public class MainActivity extends AppCompatActivity {
     private void setUpRecyclerViewShortTermGoals(){
 
         Query query = new FireBaseHandler().getShortTermGoals()
-                .whereEqualTo("user_Id", uid);//.orderBy("created", Query.Direction.DESCENDING);
-
+                .whereEqualTo("user_Id", uid)
+                .whereEqualTo("done_flag", false)
+                .orderBy("created", Query.Direction.DESCENDING);
+        
         FirestoreRecyclerOptions<ShortTermGoal> options = new FirestoreRecyclerOptions.Builder<ShortTermGoal>()
                 .setQuery(query, ShortTermGoal.class)
                 .build();
