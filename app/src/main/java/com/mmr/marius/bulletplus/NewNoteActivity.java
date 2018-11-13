@@ -75,10 +75,9 @@ public class NewNoteActivity extends AppCompatActivity {
         mNotebookRef.add(new Note(title, description, priority));
 
         LongTermGoal ltg = new LongTermGoal("title", "PERSONAL", "PROFESSIONAL");
-        ltg.add();
 
-        //FireBaseHandler fbh = new FireBaseHandler();
-        //fbh.addLongTermGoal(ltg);
+        FireBaseHandler fbh = new FireBaseHandler();
+        fbh.addLongTermGoal(ltg);
 
         Toast.makeText(this, "Note added", Toast.LENGTH_SHORT).show();
         finish();
