@@ -30,11 +30,10 @@ public class AuthActivity extends AppCompatActivity {
     private Button mEmailSignInButton;
     private Button mEmailRegisterButton;
 
-    private SharedPreferences loginDetails;
-    private SharedPreferences.Editor loginDetailsEditor;
+    private PrefSingleton prefSingleton;
+    //private SharedPreferences loginDetails;
+    //private SharedPreferences.Editor loginDetailsEditor;
     //private Boolean saveLogin //checkbox
-
-    //TODO FIX empty email and password make app crash
 
     //TODO fix register and pop up of sign in screen when already signed in (move sign in methode and inflate only if failed)
     @Override
@@ -45,6 +44,8 @@ public class AuthActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
+        prefSingleton = PrefSingleton.getInstance();
+
         mAuth = FirebaseAuth.getInstance();
 
         mEmail = (EditText) findViewById(R.id.email);
@@ -54,17 +55,24 @@ public class AuthActivity extends AppCompatActivity {
         mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String email = mEmail.getText().toString();
                 String password = mPassword.getText().toString();
 
-                loginDetailsEditor.putString("email", email);
-                loginDetailsEditor.putString("password", password);
-                loginDetailsEditor.commit();
+                Log.i(TAG, "." + email + "." + " - " + password);
 
-                Log.i(TAG, email + " - " + password);
+                if(!email.matches("") && !password.matches("")){
+                    prefSingleton.writePreference("email", email);
+                    prefSingleton.writePreference("password", password);
 
-                signIn(email, password);
+                    Log.i(TAG, email + " - " + password);
+
+                    signIn(email, password);
+                }
+                else {
+                    Toast.makeText(AuthActivity.this, "Enter email and password.",
+                            Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -76,11 +84,8 @@ public class AuthActivity extends AppCompatActivity {
             }
         });
 
-        loginDetails = getSharedPreferences("loginDetails", MODE_PRIVATE);
-        loginDetailsEditor = loginDetails.edit();
-
-        String email = loginDetails.getString("email", "");
-        String password = loginDetails.getString("password", "");
+        String email = prefSingleton.getPreference("email");
+        String password = prefSingleton.getPreference("password");
 
         if(email != "" && password != ""){
             signIn(email,password);
@@ -96,24 +101,23 @@ public class AuthActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            //FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(AuthActivity.this, "Authentication success.",
                                     Toast.LENGTH_SHORT).show();
 
                             Intent resultIntent = new Intent();
                             //resultIntent.putExtra("email", email);
-
                             setResult(Activity.RESULT_OK, resultIntent);
+
                             finish();
-                            //updateUI(user);
                         } else {
+                            //TODO fix
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(AuthActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
 
                             signOut();
-                            //updateUI(null);
                         }
 
                         // ...
@@ -124,7 +128,6 @@ public class AuthActivity extends AppCompatActivity {
     //TODO add signOut button
     private void signOut(){
         mAuth.signOut();
-        loginDetailsEditor.clear();
-        loginDetailsEditor.commit();
+        prefSingleton.clear();
     }
 }

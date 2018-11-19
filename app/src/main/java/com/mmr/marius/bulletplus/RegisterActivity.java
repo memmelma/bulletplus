@@ -1,5 +1,7 @@
 package com.mmr.marius.bulletplus;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -48,14 +50,23 @@ public class RegisterActivity extends AppCompatActivity {
                 String password_2 = mPassword_2.getText().toString();
 
                 Log.i(TAG, email + " - " + password_1 + " - " + password_2);
-                /*
-                if(!password_1.equals(password_2)){
+
+                if(!password_1.matches(password_2)){
                     Toast.makeText(RegisterActivity.this, "Passwords must be identical",
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
-                */
-                register(email, password_1);
+
+                if(!email.matches("") && !password_1.matches("")){
+
+                    Log.i(TAG, email + " - " + password_1);
+
+                    register(email, password_1);
+                }
+                else {
+                    Toast.makeText(RegisterActivity.this, "Enter email and password.",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
