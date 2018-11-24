@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".MainActivityExperimental"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,15 +25,15 @@
         </activity>
         <activity
             android:name=".NewNoteActivity"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivityExperimental" />
         <activity
             android:name=".AuthActivity"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivityExperimental" />
         <activity
             android:name=".RegisterActivity"
             android:label="@string/title_activity_register"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".LoadingActivity"></activity>
+        <activity android:name=".LoadingActivity" />
     </application>
 
 </manifest>

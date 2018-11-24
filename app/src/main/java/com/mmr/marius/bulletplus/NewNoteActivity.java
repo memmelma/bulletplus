@@ -78,7 +78,8 @@ public class NewNoteActivity extends AppCompatActivity {
         LongTermGoal ltg = new LongTermGoal("title", "PERSONAL", "PROFESSIONAL");
 
         FireBaseHandler fbh = new FireBaseHandler();
-        fbh.addLongTermGoal(ltg);
+        String uid = fbh.getUserID();
+        fbh.addLongTermGoal(ltg, uid);
 
         Toast.makeText(this, "Note added", Toast.LENGTH_SHORT).show();
         finish();

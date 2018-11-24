@@ -25,20 +25,20 @@ public class FireBaseHandler {
         mAuth = FirebaseAuth.getInstance();
     }
 
-    public void addShortTermGoal(ShortTermGoal stg){
-        getShortTermGoals().add(stg);
+    public void addShortTermGoal(ShortTermGoal stg, String uid){
+        getShortTermGoalsUndone(uid).add(stg);
     }
 
-    public CollectionReference getShortTermGoals(){
-        return getCollectionReference("short_term_goals");
+    public CollectionReference getShortTermGoalsUndone(String uid){
+        return getCollectionReference("short_term_goals/" + uid + "/undone");
     }
 
-    public void addLongTermGoal(LongTermGoal ltg){
-        getLongTermGoals().add(ltg);
+    public void addLongTermGoal(LongTermGoal ltg, String uid){
+        getLongTermGoalsUndone(uid).add(ltg);
     }
 
-    public CollectionReference getLongTermGoals(){
-        return getCollectionReference("long_term_goals");
+    public CollectionReference getLongTermGoalsUndone(String uid){
+        return getCollectionReference("long_term_goals/" + uid + "/undone");
     }
 
     public void addUser(User  user){
