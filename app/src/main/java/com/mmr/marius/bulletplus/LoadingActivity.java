@@ -3,6 +3,7 @@ package com.mmr.marius.bulletplus;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +28,9 @@ public class LoadingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+
         mAuth = FirebaseAuth.getInstance();
 
         mSharedPreferences = PrefSingleton.getInstance();
@@ -34,15 +38,13 @@ public class LoadingActivity extends AppCompatActivity {
         String password = mSharedPreferences.getPreference("password");
 
         Log.i(TAG, email + password);
+
         if(email!="" || password!="")
-        signIn(email, password);
+            signIn(email, password);
         else{
             Intent i = new Intent(LoadingActivity.this, AuthActivity.class);
             startActivityForResult(i, REQUEST_CODE_SIGN_IN);
         }
-
-        //Intent i = new Intent(LoadingActivity.this, AuthActivity.class);
-        //startActivityForResult(i, REQUEST_CODE_SIGN_IN);
     }
 
     @Override
@@ -53,7 +55,6 @@ public class LoadingActivity extends AppCompatActivity {
                 //use data.getExtra(...) to retrieve the returned data
 
                 Intent resultIntent = new Intent();
-                //resultIntent.putExtra("email", email);
                 setResult(Activity.RESULT_OK, resultIntent);
 
                 finish();
@@ -67,23 +68,19 @@ public class LoadingActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
-                            Intent resultIntent = new Intent();
-                            //resultIntent.putExtra("email", email);
 
+                            Intent resultIntent = new Intent();
                             setResult(Activity.RESULT_OK, resultIntent);
+
                             finish();
-                            //updateUI(user);
+
                         } else {
-                            // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
+
                             Intent i = new Intent(LoadingActivity.this, AuthActivity.class);
                             startActivityForResult(i, REQUEST_CODE_SIGN_IN);
-                            //updateUI(null);
                         }
-
-                        // ...
                     }
                 });
     }

@@ -3,7 +3,6 @@ package com.mmr.marius.bulletplus;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +12,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,7 +25,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-public class MainActivityExperimental extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -47,7 +45,6 @@ public class MainActivityExperimental extends AppCompatActivity {
     private final static String TAG = "com.marius.main";
     private final static int REQUEST_CODE_LOAD = 42;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    //private CollectionReference mNotebookRef = db.collection("Notebook");
 
     private GoalAdapterLongTerm mAdapterLongTerm;
     private GoalAdapterShortTerm mAdapterShortTerm;
@@ -57,12 +54,15 @@ public class MainActivityExperimental extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_experimental);
+        setContentView(R.layout.activity_main);
 
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-        Toast.makeText(MainActivityExperimental.this, "Experimental",
-                Toast.LENGTH_SHORT).show();
+        /*
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        //OR
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
+        */
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -80,17 +80,14 @@ public class MainActivityExperimental extends AppCompatActivity {
         PrefSingleton.getInstance().Initialize(getApplicationContext());
         mSharedPreferences = PrefSingleton.getInstance();
 
-        ActionBar actionBar = getSupportActionBar();
-        //actionBar.hide();
-
-        Intent i = new Intent(MainActivityExperimental.this, LoadingActivity.class);
+        Intent i = new Intent(MainActivity.this, LoadingActivity.class);
         startActivityForResult(i, REQUEST_CODE_LOAD);
 
         FloatingActionButton mButtonAddNote = findViewById(R.id.button_add);
         mButtonAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivityExperimental.this, NewNoteActivity.class));
+                startActivity(new Intent(MainActivity.this, NewGoalActivity.class));
             }
         });
     }
@@ -150,17 +147,15 @@ public class MainActivityExperimental extends AppCompatActivity {
                 case 1:
                     try{
                         mAdapterShortTerm.startListening();
-                        Log.i(TAG, "started listening short");
                     }catch(Exception e){
-
+                        //Log.e(TAG, "No mAdapterShortTerm found.");
                     }
                     break;
                 case 2:
                     try{
                         mAdapterLongTerm.startListening();
-                        Log.i(TAG, "started listening long");
                     }catch(Exception e){
-
+                        //Log.e(TAG, "No mAdapterShortTerm found.");
                     }
                     break;
             }
@@ -172,11 +167,9 @@ public class MainActivityExperimental extends AppCompatActivity {
             switch (getArguments().getInt(ARG_SECTION_NUMBER)) {
                 case 1:
                     mAdapterShortTerm.stopListening();
-                    Log.i(TAG, "stopped listening short");
                     break;
                 case 2:
                     mAdapterLongTerm.stopListening();
-                    Log.i(TAG, "stopped listening long");
                     break;
             }
         }
@@ -187,8 +180,6 @@ public class MainActivityExperimental extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-
-            Log.i(TAG, "tab #" + getArguments().getInt(ARG_SECTION_NUMBER));
 
             View rootView;
             RecyclerView mRecyclerView;
@@ -237,14 +228,15 @@ public class MainActivityExperimental extends AppCompatActivity {
                     mAdapterLongTerm.startListening();
                     break;
 
-                case 3:
-                    rootView = inflater.inflate(R.layout.fragment_main_activity_experimental, container, false);
+                case 3: //Statistics
+                    //TODO dashboard, statistics
+                    rootView = inflater.inflate(R.layout.fragment_main_activity, container, false);
                     TextView textView = (TextView) rootView.findViewById(R.id.section_label);
                     textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
                     break;
 
                 default:
-                    rootView = inflater.inflate(R.layout.fragment_main_activity_experimental, container, false);
+                    rootView = null;
                     break;
 
             }
@@ -283,7 +275,8 @@ public class MainActivityExperimental extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(requestCode) {
             case REQUEST_CODE_LOAD:
-                Log.i(TAG, "returned from loading");
+                //TODO remove startActivityWithResult
+                //Log.i(TAG, "returned from loading");
                 //use data.getExtra(...) to retrieve the returned data
                 break;
         }

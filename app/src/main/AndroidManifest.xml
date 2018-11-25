@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivityExperimental"
+            android:name=".MainActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,11 +24,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".NewNoteActivity"
-            android:parentActivityName=".MainActivityExperimental" />
+            android:name=".NewGoalActivity"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".AuthActivity"
-            android:parentActivityName=".MainActivityExperimental" />
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".RegisterActivity"
             android:label="@string/title_activity_register"

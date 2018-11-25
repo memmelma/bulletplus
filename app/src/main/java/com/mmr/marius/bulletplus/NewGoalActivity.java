@@ -2,7 +2,6 @@ package com.mmr.marius.bulletplus;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -10,12 +9,7 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-public class NewNoteActivity extends AppCompatActivity {
+public class NewGoalActivity extends AppCompatActivity {
 
     private EditText mEditTextTitle;
     private EditText mEditTextDescription;
@@ -28,7 +22,7 @@ public class NewNoteActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_note);
+        setContentView(R.layout.activity_new_goal);
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
         setTitle("Add Note");
@@ -71,9 +65,12 @@ public class NewNoteActivity extends AppCompatActivity {
             return;
         }
 
+        /*
         CollectionReference mNotebookRef = FirebaseFirestore.getInstance()
+
                 .collection("Notebook");
         mNotebookRef.add(new Note(title, description, priority));
+         */
 
         LongTermGoal ltg = new LongTermGoal("title", "PERSONAL", "PROFESSIONAL");
 
@@ -81,7 +78,7 @@ public class NewNoteActivity extends AppCompatActivity {
         String uid = fbh.getUserID();
         fbh.addLongTermGoal(ltg, uid);
 
-        Toast.makeText(this, "Note added", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Goal added", Toast.LENGTH_SHORT).show();
         finish();
     }
 }
