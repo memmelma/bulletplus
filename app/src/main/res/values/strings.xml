@@ -16,8 +16,8 @@
     <string name="action_register">Register</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_main_experimental">MainActivityExperimental</string>
-    <string name="tab_text_1">Long Term</string>
-    <string name="tab_text_2">Short Term</string>
+    <string name="tab_text_1">Short Term</string>
+    <string name="tab_text_2">Long Term</string>
     <string name="tab_text_3">Statistics</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>

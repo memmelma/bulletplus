@@ -6,13 +6,13 @@ public class ShortTermGoal {
     private Date created;
     private String title;
     private String long_term_goal_Id;
-    private String category;
+    private long category;
     //TODO interface for ShortTermGoal and LongTermGoals
     public ShortTermGoal(){
         //needed for FireBase
     }
 
-    public ShortTermGoal(String title, String category){
+    public ShortTermGoal(String title, long category){
         this.title = title;
         this.created = new Date();
         this.category = category;
@@ -32,7 +32,7 @@ public class ShortTermGoal {
         return long_term_goal_Id;
     }
 
-    public String getCategory() {
+    public long getCategory() {
         return category;
     }
 

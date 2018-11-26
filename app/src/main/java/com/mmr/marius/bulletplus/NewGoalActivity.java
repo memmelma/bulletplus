@@ -76,24 +76,24 @@ public class NewGoalActivity extends AppCompatActivity {
 
         int selectedId = mRadioGroup.getCheckedRadioButtonId();
 
-        String category;
+        long category;
 
         switch(selectedId){
             case R.id.radio0:
-                category = "PERSONAL";
+                category = 0; //"PERSONAL";
                 break;
             case R.id.radio1:
-                category = "SOCIAL";
+                category = 1; //"SOCIAL";
                 break;
             case R.id.radio2:
-                category = "HEALTH";
+                category = 2; //"HEALTH";
                 break;
             case R.id.radio3:
-                category = "PROFESSIONAL";
+                category = 3; //"PROFESSIONAL";
                 break;
             default:
                 //should never be the case, because there always is a selected radio button
-                category = "PERSONAL";
+                category = 0; //"PERSONAL";
                 break;
         }
 
