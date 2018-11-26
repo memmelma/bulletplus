@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chauthai.swipereveallayout.SwipeRevealLayout;
+import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
@@ -19,6 +21,8 @@ import java.text.SimpleDateFormat;
 public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal, GoalAdapterShortTerm.GoalHolder> {
 
     private final static String TAG = "com.marius.adaptershort";
+
+    private final ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
 
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
@@ -32,8 +36,11 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
 
     @Override
     protected void onBindViewHolder(@NonNull GoalAdapterShortTerm.GoalHolder holder, int position, @NonNull ShortTermGoal model) {
+        viewBinderHelper.bind(holder.mSwipeRevealLayout, model.getTitle()); //TODO unique id instead!
+
         holder.mTextViewTitle.setText(model.getTitle());
         //holder.mTextViewCreated.setText(new SimpleDateFormat("yyyy-MM-dd").format(model.getCreated()));
+
         Log.i(TAG, "short " + model.getCategory());
         switch ((int) model.getCategory()){
             case 0:
@@ -68,12 +75,14 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
         TextView mTextViewTitle;
         TextView mTextViewCreated;
         ImageView mImageViewCategory;
+        SwipeRevealLayout mSwipeRevealLayout;
 
         public GoalHolder(View v) {
             super(v);
             mTextViewTitle = (TextView) v.findViewById(R.id.text_view_title);
             //mTextViewCreated = v.findViewById(R.id.text_view_created);
             mImageViewCategory = (ImageView) v.findViewById(R.id.imageViewCategory);
+            mSwipeRevealLayout = (SwipeRevealLayout) v.findViewById(R.id.swipeRevealLayout);
         }
     }
 }
