@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 tabPosition = tab.getPosition();
                 //Log.i(TAG, "tabpos " + tabPosition);
+                //TODO change icon depending on tab -> statistics!
             }
 
             @Override
