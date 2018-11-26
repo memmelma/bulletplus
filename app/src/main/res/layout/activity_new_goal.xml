@@ -1,37 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
     tools:context=".NewGoalActivity">
 
     <EditText
         android:id="@+id/edit_text_title"
-        android:layout_width="match_parent"
+        android:layout_width="352dp"
         android:layout_height="wrap_content"
-        android:hint="Title"
-        android:inputType="text" />
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:hint="@string/new_goal_hint"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/edit_text_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Description"
-        android:inputType="textMultiLine" />
 
-    <TextView
+    <RadioGroup
+        android:id="@+id/radioGroup1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Priority"
-        android:layout_marginTop="16dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_title">
 
-    <NumberPicker
-        android:id="@+id/number_picker_priority"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"></NumberPicker>
+        <RadioButton
+            android:id="@+id/radio0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="25dp"
+            android:checked="true"
+            android:button="@drawable/radio_btn_personal"/>
+        <!--android:button="@drawable/ic_personal"-->
 
-</LinearLayout>
+        <RadioButton
+            android:id="@+id/radio1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="25dp"
+            android:button="@drawable/radio_btn_social"
+            android:checked="true" />
+
+        <RadioButton
+            android:id="@+id/radio2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="25dp"
+            android:button="@drawable/radio_btn_health" />
+
+        <RadioButton
+            android:id="@+id/radio3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="25dp"
+            android:button="@drawable/radio_btn_professional" />
+
+    </RadioGroup>
+
+    <!--
+    //initialize the controls
+    final RadioGroup rg1 = (RadioGroup)findViewById(R.id.radioGroup1);
+    CheckBox ck1 = (CheckBox)findViewById(R.id.checkBox1);
+
+    //set setOnCheckedChangeListener()
+    ck1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+        @Override
+        public void onCheckedChanged(CompoundButton checkBox, boolean checked) {
+            //basically, since we will set enabled state to whatever state the checkbox is
+            //therefore, we will only have to setEnabled(checked)
+            for(int i = 0; i < rg1.getChildCount(); i++){
+                ((RadioButton)rg1.getChildAt(i)).setEnabled(checked);
+            }
+        }
+    });
+
+    //set default to false
+    for(int i = 0; i < rg1.getChildCount(); i++){
+        ((RadioButton)rg1.getChildAt(i)).setEnabled(false);
+    -->
+</android.support.constraint.ConstraintLayout>

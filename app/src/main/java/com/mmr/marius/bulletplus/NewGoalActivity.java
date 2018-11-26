@@ -17,7 +17,7 @@ public class NewGoalActivity extends AppCompatActivity {
 
     //TODO add long term and short term switch
 
-    private final static String TAG = "com.marius.newnote";
+    private final static String TAG = "com.marius.newgoal";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,27 +25,27 @@ public class NewGoalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_goal);
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-        setTitle("Add Note");
+        setTitle("Add -placeholder- Goal");
 
         mEditTextTitle = findViewById(R.id.edit_text_title);
-        mEditTextDescription = findViewById(R.id.edit_text_description);
-        mNumberPickerPriority = findViewById(R.id.number_picker_priority);
-        mNumberPickerPriority.setMinValue(1); //min prio
-        mNumberPickerPriority.setMaxValue(10); //max prio
+        //mEditTextDescription = findViewById(R.id.edit_text_description);
+        //mNumberPickerPriority = findViewById(R.id.number_picker_priority);
+        //mNumberPickerPriority.setMinValue(1); //min prio
+        //mNumberPickerPriority.setMaxValue(10); //max prio
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.new_note, menu);
+        menuInflater.inflate(R.menu.new_goal, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.save_note:
-                saveNote();
+            case R.id.save_goal:
+                saveGoal();
                 return true;
 
             //add more cases here for different menu items
@@ -54,6 +54,29 @@ public class NewGoalActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private void saveGoal(){
+        //TODO write to firebase
+        //TODO distinguish between long / short term
+
+        //get inputs and validate them
+        /*
+        if(title.trim().isEmpty() || description.trim().isEmpty()) {
+            Toast.makeText(this, "Please insert a title and a description",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        */
+
+        LongTermGoal ltg = new LongTermGoal("title", "PERSONAL", "PROFESSIONAL");
+
+        FireBaseHandler fbh = new FireBaseHandler();
+        String uid = fbh.getUserID();
+        fbh.addLongTermGoal(ltg, uid);
+
+        Toast.makeText(this, "Goal added", Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
 
     private void saveNote() {
         String title = mEditTextTitle.getText().toString();
