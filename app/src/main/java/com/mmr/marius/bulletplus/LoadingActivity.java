@@ -37,7 +37,7 @@ public class LoadingActivity extends AppCompatActivity {
         String email = mSharedPreferences.getPreference("email");
         String password = mSharedPreferences.getPreference("password");
 
-        Log.i(TAG, email + password);
+        //Log.i(TAG, email + password);
 
         if(email!="" || password!="")
             signIn(email, password);
@@ -51,7 +51,7 @@ public class LoadingActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(requestCode) {
             case REQUEST_CODE_SIGN_IN:
-                Log.i(TAG, "returned from auth");
+                //Log.i(TAG, "returned from auth");
                 //use data.getExtra(...) to retrieve the returned data
 
                 Intent resultIntent = new Intent();

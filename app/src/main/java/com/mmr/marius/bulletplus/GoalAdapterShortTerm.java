@@ -30,7 +30,7 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
     protected void onBindViewHolder(@NonNull GoalAdapterShortTerm.GoalHolder holder, int position, @NonNull ShortTermGoal model) {
         holder.mTextViewTitle.setText(model.getTitle());
         //holder.mTextViewCreated.setText(new SimpleDateFormat("yyyy-MM-dd").format(model.getCreated()));
-        holder.mTextViewCategory.setText(model.getCategory());
+        //holder.mTextViewCategory.setText(model.getCategory());
     }
 
     @NonNull
@@ -55,7 +55,7 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
             super(v);
             mTextViewTitle = v.findViewById(R.id.text_view_title);
             //mTextViewCreated = v.findViewById(R.id.text_view_created);
-            mTextViewCategory = v.findViewById(R.id.text_view_category);
+            //mTextViewCategory = v.findViewById(R.id.text_view_category);
         }
     }
 }

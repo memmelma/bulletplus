@@ -231,6 +231,7 @@ public class MainActivity extends AppCompatActivity {
                     rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
                     mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
+                    //Firestore RecyclerView doesn't accept where statements for live bound data -> reorganized database
                     query = new FireBaseHandler().getShortTermGoalsUndone(uid)
                             .orderBy("created", Query.Direction.DESCENDING);
 
