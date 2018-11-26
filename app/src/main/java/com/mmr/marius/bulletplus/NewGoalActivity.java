@@ -1,21 +1,27 @@
 package com.mmr.marius.bulletplus;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.NumberPicker;
+import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import com.google.android.gms.common.server.converter.StringToIntConverter;
 
 public class NewGoalActivity extends AppCompatActivity {
 
-    private EditText mEditTextTitle;
-    private EditText mEditTextDescription;
-    private NumberPicker mNumberPickerPriority;
+    private EditText mEditTextGoal;
+    private RadioGroup mRadioGroup;
 
-    //TODO add long term and short term switch
+    private String type;
+    private final String type_long = "long-term";
+    private final String type_short = "short-term";
 
     private final static String TAG = "com.marius.newgoal";
 
@@ -24,14 +30,25 @@ public class NewGoalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_goal);
 
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-        setTitle("Add -placeholder- Goal");
+        Intent i = getIntent();
+        int extra = i.getIntExtra(MainActivity.TAG, 0);
 
-        mEditTextTitle = findViewById(R.id.edit_text_title);
-        //mEditTextDescription = findViewById(R.id.edit_text_description);
-        //mNumberPickerPriority = findViewById(R.id.number_picker_priority);
-        //mNumberPickerPriority.setMinValue(1); //min prio
-        //mNumberPickerPriority.setMaxValue(10); //max prio
+        switch(extra){
+            case 0:
+                type = type_short;
+                break;
+            case 1:
+                type = type_long;
+                break;
+            default:
+                return;
+        }
+
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
+        setTitle("Add " + type + " goal");
+
+        mEditTextGoal = (EditText) findViewById(R.id.edit_goal_title);
+        mRadioGroup = (RadioGroup) findViewById(R.id.radioGroupCategories);
     }
 
     @Override
@@ -56,52 +73,53 @@ public class NewGoalActivity extends AppCompatActivity {
     }
 
     private void saveGoal(){
-        //TODO write to firebase
-        //TODO distinguish between long / short term
 
-        //get inputs and validate them
-        /*
-        if(title.trim().isEmpty() || description.trim().isEmpty()) {
-            Toast.makeText(this, "Please insert a title and a description",Toast.LENGTH_SHORT).show();
+        int selectedId = mRadioGroup.getCheckedRadioButtonId();
+
+        String category;
+
+        switch(selectedId){
+            case R.id.radio0:
+                category = "PERSONAL";
+                break;
+            case R.id.radio1:
+                category = "SOCIAL";
+                break;
+            case R.id.radio2:
+                category = "HEALTH";
+                break;
+            case R.id.radio3:
+                category = "PROFESSIONAL";
+                break;
+            default:
+                //should never be the case, because there always is a selected radio button
+                category = "PERSONAL";
+                break;
+        }
+
+        String goalTitle = mEditTextGoal.getText().toString();
+
+        if(goalTitle.trim().isEmpty()){
+            Toast.makeText(this, "Please insert a goal",Toast.LENGTH_SHORT).show();
             return;
         }
-        */
 
-        LongTermGoal ltg = new LongTermGoal("title", "PERSONAL", "PROFESSIONAL");
+        //Log.i(TAG, "category " + category + " title " + goalTitle);
 
         FireBaseHandler fbh = new FireBaseHandler();
         String uid = fbh.getUserID();
-        fbh.addLongTermGoal(ltg, uid);
 
-        Toast.makeText(this, "Goal added", Toast.LENGTH_SHORT).show();
-        finish();
-    }
-
-
-    private void saveNote() {
-        String title = mEditTextTitle.getText().toString();
-        String description = mEditTextDescription.getText().toString();
-        int priority = mNumberPickerPriority.getValue();
-
-        if(title.trim().isEmpty() || description.trim().isEmpty()) {
-            Toast.makeText(this, "Please insert a title and a description",Toast.LENGTH_SHORT).show();
-            return;
+        if(type.equals(type_short)){
+            ShortTermGoal stg = new ShortTermGoal(goalTitle, category);
+            fbh.addShortTermGoal(stg, uid);
+            Toast.makeText(this, type_short + " goal added", Toast.LENGTH_SHORT).show();
+        } else{
+            LongTermGoal ltg = new LongTermGoal(goalTitle, category);
+            fbh.addLongTermGoal(ltg, uid);
+            Toast.makeText(this, type_long + " goal added", Toast.LENGTH_SHORT).show();
         }
 
-        /*
-        CollectionReference mNotebookRef = FirebaseFirestore.getInstance()
-
-                .collection("Notebook");
-        mNotebookRef.add(new Note(title, description, priority));
-         */
-
-        LongTermGoal ltg = new LongTermGoal("title", "PERSONAL", "PROFESSIONAL");
-
-        FireBaseHandler fbh = new FireBaseHandler();
-        String uid = fbh.getUserID();
-        fbh.addLongTermGoal(ltg, uid);
-
-        Toast.makeText(this, "Goal added", Toast.LENGTH_SHORT).show();
         finish();
     }
+
 }

@@ -1,6 +1,8 @@
 package com.mmr.marius.bulletplus;
 
+import android.app.IntentService;
 import android.content.Intent;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,14 +44,17 @@ public class MainActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
-    private final static String TAG = "com.marius.main";
+    public final static String TAG = "com.marius.main";
     private final static int REQUEST_CODE_LOAD = 42;
+
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private GoalAdapterLongTerm mAdapterLongTerm;
     private GoalAdapterShortTerm mAdapterShortTerm;
 
     private PrefSingleton mSharedPreferences;
+
+    private int tabPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
@@ -82,15 +88,48 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(MainActivity.this, LoadingActivity.class);
         startActivityForResult(i, REQUEST_CODE_LOAD);
 
+        TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                tabPosition = tab.getPosition();
+                //Log.i(TAG, "tabpos " + tabPosition);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
         FloatingActionButton mButtonAddNote = findViewById(R.id.button_add);
         mButtonAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, NewGoalActivity.class));
+
+                //Log.i(TAG, "clicked tabPos " + tabPosition);
+
+                switch (tabPosition){
+                    case 0:
+                    case 1:
+                        //0 short term, 1 long term
+                        Intent i = new Intent(MainActivity.this, NewGoalActivity.class);
+                        i.putExtra(TAG, tabPosition);
+                        startActivity(i);
+                        break;
+                    case 2:
+                        //TODO link to something statistic button
+
+                }
+
             }
         });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -17,18 +17,16 @@ public class LongTermGoal {
     private static final String TAG = "com.marius.longtermgoal";
     private Date created;
     private String title;
-    private String category_1;
-    private String category_2;
+    private String category;
 
     public LongTermGoal(){
         //needed for FireBase
     }
 
-    public LongTermGoal(String title, String category_1, String category_2){
+    public LongTermGoal(String title, String category){
         this.title = title;
         this.created = new Date();
-        this.category_1 = category_1;
-        this.category_2 = category_2;
+        this.category = category;
     }
 
     public Date getCreated() {
@@ -39,11 +37,8 @@ public class LongTermGoal {
         return title;
     }
 
-    public String getCategory_1() {
-        return category_1;
+    public String getCategory() {
+        return category;
     }
 
-    public String getCategory_2() {
-        return category_2;
-    }
 }
