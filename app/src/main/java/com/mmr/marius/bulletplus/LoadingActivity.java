@@ -39,7 +39,7 @@ public class LoadingActivity extends AppCompatActivity {
 
         //Log.i(TAG, email + password);
 
-        if(email!="" || password!="")
+        if(email!="" && password!="" && email!=null && password!=null)
             signIn(email, password);
         else{
             Intent i = new Intent(LoadingActivity.this, AuthActivity.class);

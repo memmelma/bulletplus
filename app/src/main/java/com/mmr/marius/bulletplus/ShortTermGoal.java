@@ -7,7 +7,6 @@ public class ShortTermGoal {
     private String title;
     private String long_term_goal_Id;
     private long category;
-    //TODO interface for ShortTermGoal and LongTermGoals
     public ShortTermGoal(){
         //needed for FireBase
     }

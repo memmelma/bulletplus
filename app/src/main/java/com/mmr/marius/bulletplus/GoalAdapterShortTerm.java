@@ -26,7 +26,6 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
 
     private final ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
 
-    private String uid;
     private FireBaseHandler fbh;
 
     /**
@@ -37,13 +36,15 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
      */
     public GoalAdapterShortTerm(@NonNull FirestoreRecyclerOptions<ShortTermGoal> options) {
         super(options);
-        this.uid = new FireBaseHandler().getUserID();
         this.fbh = new FireBaseHandler();
     }
 
     @Override
     protected void onBindViewHolder(@NonNull GoalAdapterShortTerm.GoalHolder holder, int position, @NonNull final ShortTermGoal model) {
-        viewBinderHelper.bind(holder.mSwipeRevealLayout, model.getTitle()); //TODO unique id instead!
+
+        final String doc_id = getSnapshots().getSnapshot(position).getId();
+
+        viewBinderHelper.bind(holder.mSwipeRevealLayout, doc_id);
 
         holder.mTextViewTitle.setText(model.getTitle());
         //holder.mTextViewCreated.setText(new SimpleDateFormat("yyyy-MM-dd").format(model.getCreated()));
@@ -63,12 +64,10 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
                 break;
         }
 
-        final String doc_id = getSnapshots().getSnapshot(position).getId();
-
         holder.mImageButtonRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fbh.rmShortTermGoal(doc_id, uid);
+                fbh.rmShortTermGoal(doc_id, new FireBaseHandler().getUserID());
             }
         });
     }

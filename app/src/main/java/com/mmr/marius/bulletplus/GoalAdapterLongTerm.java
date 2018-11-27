@@ -29,7 +29,6 @@ public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, 
 
     private final ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
 
-    private String uid;
     private FireBaseHandler fbh;
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
@@ -39,13 +38,15 @@ public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, 
      */
     public GoalAdapterLongTerm(@NonNull FirestoreRecyclerOptions<LongTermGoal> options) {
         super(options);
-        this.uid = new FireBaseHandler().getUserID();
         this.fbh = new FireBaseHandler();
     }
 
     @Override
     protected void onBindViewHolder(@NonNull GoalHolder holder, int position, @NonNull final LongTermGoal model) {
-        viewBinderHelper.bind(holder.mSwipeRevealLayout, model.getTitle()); //TODO unique id instead!
+
+        final String doc_id = getSnapshots().getSnapshot(position).getId();
+
+        viewBinderHelper.bind(holder.mSwipeRevealLayout, doc_id);
 
         holder.mTextViewTitle.setText(model.getTitle());
         //holder.mTextViewCreated.setText(new SimpleDateFormat("yyyy-MM-dd").format(model.getCreated()));
@@ -65,13 +66,11 @@ public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, 
                 break;
         }
 
-        final String doc_id = getSnapshots().getSnapshot(position).getId();
-
         holder.mImageButtonRemove.bringToFront();
         holder.mImageButtonRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fbh.rmLongTermGoal(doc_id, uid);
+                fbh.rmLongTermGoal(doc_id, new FireBaseHandler().getUserID());
             }
         });
 

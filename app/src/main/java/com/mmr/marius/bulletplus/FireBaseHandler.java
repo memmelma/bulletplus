@@ -75,6 +75,7 @@ public class FireBaseHandler {
     }
 
     public FirebaseUser getUser(){
+        FirebaseUser u = mAuth.getCurrentUser();
         return mAuth.getCurrentUser();
     }
 

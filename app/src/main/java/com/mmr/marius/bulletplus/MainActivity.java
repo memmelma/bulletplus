@@ -1,8 +1,6 @@
 package com.mmr.marius.bulletplus;
 
-import android.app.IntentService;
 import android.content.Intent;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +12,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,8 +19,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -52,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private GoalAdapterLongTerm mAdapterLongTerm;
     private GoalAdapterShortTerm mAdapterShortTerm;
 
-    private PrefSingleton mSharedPreferences;
+    private PrefSingleton mPrefSingleton;
 
     private int tabPosition = 0;
 
@@ -83,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
         PrefSingleton.getInstance().Initialize(getApplicationContext());
-        mSharedPreferences = PrefSingleton.getInstance();
+        mPrefSingleton = PrefSingleton.getInstance();
 
         Intent i = new Intent(MainActivity.this, LoadingActivity.class);
         startActivityForResult(i, REQUEST_CODE_LOAD);
@@ -124,8 +123,7 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(i);
                         break;
                     case 2:
-                        //TODO link to something statistic button
-
+                        //TODO link to something statistic button // maybe update?
                 }
 
             }
@@ -150,8 +148,20 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.action_logout) {
+            signOut();
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //TODO add signOut button
+    private void signOut(){
+        FirebaseAuth.getInstance().signOut();
+        mPrefSingleton.clear();
+        Toast.makeText(MainActivity.this, "Logged out",
+                Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(MainActivity.this, LoadingActivity.class));
     }
 
     /**
@@ -278,11 +288,8 @@ public class MainActivity extends AppCompatActivity {
                 default:
                     rootView = null;
                     break;
-
             }
-
             return rootView;
-
         }
 
     }
