@@ -7,15 +7,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.w3c.dom.Text;
+
+import java.util.Date;
 
 public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, GoalAdapterLongTerm.GoalHolder> {
 
@@ -23,6 +29,8 @@ public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, 
 
     private final ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
 
+    private String uid;
+    private FireBaseHandler fbh;
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
      * FirestoreRecyclerOptions} for configuration options.
@@ -31,16 +39,17 @@ public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, 
      */
     public GoalAdapterLongTerm(@NonNull FirestoreRecyclerOptions<LongTermGoal> options) {
         super(options);
+        this.uid = new FireBaseHandler().getUserID();
+        this.fbh = new FireBaseHandler();
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull GoalHolder holder, int position, @NonNull LongTermGoal model) {
+    protected void onBindViewHolder(@NonNull GoalHolder holder, int position, @NonNull final LongTermGoal model) {
         viewBinderHelper.bind(holder.mSwipeRevealLayout, model.getTitle()); //TODO unique id instead!
 
         holder.mTextViewTitle.setText(model.getTitle());
         //holder.mTextViewCreated.setText(new SimpleDateFormat("yyyy-MM-dd").format(model.getCreated()));
 
-        Log.i(TAG, "short " + model.getCategory());
         switch ((int) model.getCategory()){
             case 0:
                 holder.mImageViewCategory.setImageResource(R.drawable.ic_personal);
@@ -55,6 +64,17 @@ public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, 
                 holder.mImageViewCategory.setImageResource(R.drawable.ic_professional);
                 break;
         }
+
+        final String doc_id = getSnapshots().getSnapshot(position).getId();
+
+        holder.mImageButtonRemove.bringToFront();
+        holder.mImageButtonRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fbh.rmLongTermGoal(doc_id, uid);
+            }
+        });
+
     }
 
     @NonNull
@@ -75,6 +95,7 @@ public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, 
         TextView mTextViewCreated;
         ImageView mImageViewCategory;
         SwipeRevealLayout mSwipeRevealLayout;
+        ImageButton mImageButtonRemove;
 
         public GoalHolder(View v) {
             super(v);
@@ -82,6 +103,7 @@ public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, 
             //mTextViewCreated = v.findViewById(R.id.text_view_created);
             mImageViewCategory = (ImageView) v.findViewById(R.id.imageViewCategory);
             mSwipeRevealLayout = (SwipeRevealLayout) v.findViewById(R.id.swipeRevealLayout);
+            mImageButtonRemove = (ImageButton) v.findViewById(R.id.removeGoal);
         }
     }
 }
