@@ -1,6 +1,8 @@
 package com.mmr.marius.bulletplus;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,9 +25,31 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.github.mikephil.charting.charts.Chart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.charts.RadarChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.data.RadarData;
+import com.github.mikephil.charting.data.RadarDataSet;
+import com.github.mikephil.charting.data.RadarEntry;
+import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
     private PrefSingleton mPrefSingleton;
 
     private int tabPosition = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 2:
                         //TODO link to something statistic button // maybe update?
+
                 }
 
             }
@@ -232,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
 
             View rootView;
             RecyclerView mRecyclerView;
-            Query query;
+            final Query query;
 
             String uid = new FireBaseHandler().getUserID();
 
@@ -280,9 +307,114 @@ public class MainActivity extends AppCompatActivity {
 
                 case 3: //Statistics
                     //TODO dashboard, statistics
-                    rootView = inflater.inflate(R.layout.fragment_main_activity, container, false);
-                    TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-                    textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+                    rootView = inflater.inflate(R.layout.fragment_statistic, container, false);
+
+                    /*
+                    new FireBaseHandler().getLongTermGoalsDone(uid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if(task.isSuccessful()){
+                                QuerySnapshot querySnapshot = task.getResult();
+                                List<DocumentSnapshot> documents = querySnapshot.getDocuments();
+                                for(DocumentSnapshot doc : documents){
+
+                                }
+                                //entries.add(new PieEntry(documents.size(), "Done"));
+                                Log.i(TAG, "done size " + documents.size());
+                            }else{
+
+                            }
+                        }
+                    });
+
+                    new FireBaseHandler().getLongTermGoalsUndone(uid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if(task.isSuccessful()){
+                                QuerySnapshot querySnapshot = task.getResult();
+                                List<DocumentSnapshot> documents = querySnapshot.getDocuments();
+                                for(DocumentSnapshot doc : documents){
+
+                                }
+                                //entries.add(new PieEntry(documents.size(), "Undone"));
+                                Log.i(TAG, "undone size " + documents.size());
+
+                            }else{
+
+                            }
+                        }
+                    });
+                    */
+                    PieChart pieChart = (PieChart) rootView.findViewById(R.id.pieChart);
+                    List<PieEntry> entries_pie = new ArrayList<>();
+
+                    entries_pie.add(new PieEntry(5, "Done"));
+                    entries_pie.add(new PieEntry(5, "Undone"));
+
+                    Log.i(TAG, "set PieDataSet");
+                    PieDataSet set_pie = new PieDataSet(entries_pie, "Long Term Goals");
+                    set_pie.setColors(new int[] { R.color.colorPrimary, R.color.colorSecondary}, getContext());
+
+                    Log.i(TAG, "create Pie");
+                    PieData data_pie = new PieData(set_pie);
+                    pieChart.setData(data_pie);
+                    pieChart.invalidate(); // refresh
+
+                    PieChart pieChart2 = (PieChart) rootView.findViewById(R.id.pieChart2);
+                    pieChart2.setData(data_pie);
+                    pieChart2.invalidate(); // refresh
+
+
+                    /// -------
+
+                    RadarChart radarChart = (RadarChart) rootView.findViewById(R.id.radarChart);
+
+                    float mul = 80;
+                    float min = 20;
+                    int cnt = 5;
+
+                    ArrayList<RadarEntry> entries1 = new ArrayList<>();
+                    ArrayList<RadarEntry> entries2 = new ArrayList<>();
+
+                    // NOTE: The order of the entries when being added to the entries array determines their position around the center of
+                    // the chart.
+                    for (int i = 0; i < cnt; i++) {
+                        float val1 = (float) (Math.random() * mul) + min;
+                        entries1.add(new RadarEntry(val1));
+
+                        float val2 = (float) (Math.random() * mul) + min;
+                        entries2.add(new RadarEntry(val2));
+                    }
+
+                    RadarDataSet set1 = new RadarDataSet(entries1, "Last Week");
+                    set1.setColor(Color.rgb(103, 110, 129));
+                    set1.setFillColor(Color.rgb(103, 110, 129));
+                    set1.setDrawFilled(true);
+                    set1.setFillAlpha(180);
+                    set1.setLineWidth(2f);
+                    set1.setDrawHighlightCircleEnabled(true);
+                    set1.setDrawHighlightIndicators(false);
+
+                    RadarDataSet set2 = new RadarDataSet(entries2, "This Week");
+                    set2.setColor(Color.rgb(121, 162, 175));
+                    set2.setFillColor(Color.rgb(121, 162, 175));
+                    set2.setDrawFilled(true);
+                    set2.setFillAlpha(180);
+                    set2.setLineWidth(2f);
+                    set2.setDrawHighlightCircleEnabled(true);
+                    set2.setDrawHighlightIndicators(false);
+
+                    ArrayList<IRadarDataSet> sets = new ArrayList<>();
+                    sets.add(set1);
+                    sets.add(set2);
+
+                    RadarData data_radar = new RadarData(sets);
+                    radarChart.setData(data_radar);
+                    radarChart.invalidate(); // refresh
+
+                    RadarChart radarChart2 = (RadarChart) rootView.findViewById(R.id.radarChart2);
+                    radarChart2.setData(data_radar);
+                    radarChart2.invalidate(); // refresh
                     break;
 
                 default:
