@@ -1,7 +1,7 @@
 package com.mmr.marius.bulletplus;
 
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -14,34 +14,30 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.data.RadarData;
 import com.github.mikephil.charting.data.RadarDataSet;
 import com.github.mikephil.charting.data.RadarEntry;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -49,7 +45,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -149,6 +144,9 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(i);
                         break;
                     case 2:
+                        String uid = new FireBaseHandler().getUserID();
+                        View rootView = findViewById(R.id.linearStatistics);
+                        fetch(rootView, uid);
                         //TODO link to something statistic button // maybe update?
 
                 }
@@ -257,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            View rootView;
+            final View rootView;
             RecyclerView mRecyclerView;
             final Query query;
 
@@ -287,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
 
                 case 2: //Long Term Goals
                     rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
-                     mRecyclerView= (RecyclerView) rootView.findViewById(R.id.recycler_view);
+                    mRecyclerView= (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
                     query = new FireBaseHandler().getLongTermGoalsUndone(uid)
                             .orderBy("created", Query.Direction.DESCENDING);
@@ -306,8 +304,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case 3: //Statistics
-                    //TODO dashboard, statistics
                     rootView = inflater.inflate(R.layout.fragment_statistic, container, false);
+                    fetch(rootView, uid);
+                    break;
 
                     /*
                     new FireBaseHandler().getLongTermGoalsDone(uid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -316,16 +315,21 @@ public class MainActivity extends AppCompatActivity {
                             if(task.isSuccessful()){
                                 QuerySnapshot querySnapshot = task.getResult();
                                 List<DocumentSnapshot> documents = querySnapshot.getDocuments();
-                                for(DocumentSnapshot doc : documents){
 
+                                for(DocumentSnapshot doc : documents){
+                                    int category = (int) Integer.parseInt(doc.get("category").toString());
+                                    LongTermGoalsCategories[category]++;
                                 }
-                                //entries.add(new PieEntry(documents.size(), "Done"));
-                                Log.i(TAG, "done size " + documents.size());
+
+                                LongTermGoalsDoneSize = documents.size();
+
+                                updateChartsLong(rootView);
                             }else{
 
                             }
                         }
                     });
+
 
                     new FireBaseHandler().getLongTermGoalsUndone(uid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -333,89 +337,64 @@ public class MainActivity extends AppCompatActivity {
                             if(task.isSuccessful()){
                                 QuerySnapshot querySnapshot = task.getResult();
                                 List<DocumentSnapshot> documents = querySnapshot.getDocuments();
+
                                 for(DocumentSnapshot doc : documents){
-
+                                    int category = (int) Integer.parseInt(doc.get("category").toString());
+                                    LongTermGoalsCategories[category]++;
                                 }
-                                //entries.add(new PieEntry(documents.size(), "Undone"));
-                                Log.i(TAG, "undone size " + documents.size());
 
+                                LongTermGoalsUndoneSize = documents.size();
+
+                                updateChartsLong(rootView);
+                            }else{
+
+                            }
+                        }
+                    });
+
+                    new FireBaseHandler().getShortTermGoalsDone(uid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if(task.isSuccessful()){
+                                QuerySnapshot querySnapshot = task.getResult();
+                                List<DocumentSnapshot> documents = querySnapshot.getDocuments();
+
+                                for(DocumentSnapshot doc : documents){
+                                    int category = (int) Integer.parseInt(doc.get("category").toString());
+                                    ShortTermGoalsCategories[category]++;
+                                }
+
+                                ShortTermGoalsDoneSize = documents.size();
+
+                                updateChartsShort(rootView);
+                            }else{
+
+                            }
+                        }
+                    });
+
+
+                    new FireBaseHandler().getShortTermGoalsUndone(uid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if(task.isSuccessful()){
+                                QuerySnapshot querySnapshot = task.getResult();
+                                List<DocumentSnapshot> documents = querySnapshot.getDocuments();
+
+                                for(DocumentSnapshot doc : documents){
+                                    int category = (int) Integer.parseInt(doc.get("category").toString());
+                                    ShortTermGoalsCategories[category]++;
+                                }
+
+                                ShortTermGoalsUndoneSize = documents.size();
+
+                                updateChartsShort(rootView);
                             }else{
 
                             }
                         }
                     });
                     */
-                    PieChart pieChart = (PieChart) rootView.findViewById(R.id.pieChart);
-                    List<PieEntry> entries_pie = new ArrayList<>();
-
-                    entries_pie.add(new PieEntry(5, "Done"));
-                    entries_pie.add(new PieEntry(5, "Undone"));
-
-                    Log.i(TAG, "set PieDataSet");
-                    PieDataSet set_pie = new PieDataSet(entries_pie, "Long Term Goals");
-                    set_pie.setColors(new int[] { R.color.colorPrimary, R.color.colorSecondary}, getContext());
-
-                    Log.i(TAG, "create Pie");
-                    PieData data_pie = new PieData(set_pie);
-                    pieChart.setData(data_pie);
-                    pieChart.invalidate(); // refresh
-
-                    PieChart pieChart2 = (PieChart) rootView.findViewById(R.id.pieChart2);
-                    pieChart2.setData(data_pie);
-                    pieChart2.invalidate(); // refresh
-
-
-                    /// -------
-
-                    RadarChart radarChart = (RadarChart) rootView.findViewById(R.id.radarChart);
-
-                    float mul = 80;
-                    float min = 20;
-                    int cnt = 5;
-
-                    ArrayList<RadarEntry> entries1 = new ArrayList<>();
-                    ArrayList<RadarEntry> entries2 = new ArrayList<>();
-
-                    // NOTE: The order of the entries when being added to the entries array determines their position around the center of
-                    // the chart.
-                    for (int i = 0; i < cnt; i++) {
-                        float val1 = (float) (Math.random() * mul) + min;
-                        entries1.add(new RadarEntry(val1));
-
-                        float val2 = (float) (Math.random() * mul) + min;
-                        entries2.add(new RadarEntry(val2));
-                    }
-
-                    RadarDataSet set1 = new RadarDataSet(entries1, "Last Week");
-                    set1.setColor(Color.rgb(103, 110, 129));
-                    set1.setFillColor(Color.rgb(103, 110, 129));
-                    set1.setDrawFilled(true);
-                    set1.setFillAlpha(180);
-                    set1.setLineWidth(2f);
-                    set1.setDrawHighlightCircleEnabled(true);
-                    set1.setDrawHighlightIndicators(false);
-
-                    RadarDataSet set2 = new RadarDataSet(entries2, "This Week");
-                    set2.setColor(Color.rgb(121, 162, 175));
-                    set2.setFillColor(Color.rgb(121, 162, 175));
-                    set2.setDrawFilled(true);
-                    set2.setFillAlpha(180);
-                    set2.setLineWidth(2f);
-                    set2.setDrawHighlightCircleEnabled(true);
-                    set2.setDrawHighlightIndicators(false);
-
-                    ArrayList<IRadarDataSet> sets = new ArrayList<>();
-                    sets.add(set1);
-                    sets.add(set2);
-
-                    RadarData data_radar = new RadarData(sets);
-                    radarChart.setData(data_radar);
-                    radarChart.invalidate(); // refresh
-
-                    RadarChart radarChart2 = (RadarChart) rootView.findViewById(R.id.radarChart2);
-                    radarChart2.setData(data_radar);
-                    radarChart2.invalidate(); // refresh
-                    break;
 
                 default:
                     rootView = null;
@@ -424,6 +403,216 @@ public class MainActivity extends AppCompatActivity {
             return rootView;
         }
 
+    }
+
+    private static int LongTermGoalsUndoneSize = 0;
+    private static int LongTermGoalsDoneSize = 0;
+    private static int ShortTermGoalsUndoneSize = 0;
+    private static int ShortTermGoalsDoneSize = 0;
+
+    private static int[] LongTermGoalsCategories = new int[] {0, 0, 0, 0};
+    private static int[] ShortTermGoalsCategories = new int[] {0, 0, 0, 0};
+
+    //TODO fix bug
+    final static String[] mCategories = new String[] {"Personal", "Social", "Health", "Professional"};
+
+    private static void fetch(final View rootView, String uid){
+
+        LongTermGoalsCategories = new int[] {0, 0, 0, 0};
+        ShortTermGoalsCategories = new int[] {0, 0, 0, 0};
+
+        new FireBaseHandler().getLongTermGoalsDone(uid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    QuerySnapshot querySnapshot = task.getResult();
+                    List<DocumentSnapshot> documents = querySnapshot.getDocuments();
+
+                    for(DocumentSnapshot doc : documents){
+                        int category = (int) Integer.parseInt(doc.get("category").toString());
+                        LongTermGoalsCategories[category]++;
+                    }
+
+                    LongTermGoalsDoneSize = documents.size();
+
+                    updateChartsLong(rootView);
+                }else{
+
+                }
+            }
+        });
+
+
+        new FireBaseHandler().getLongTermGoalsUndone(uid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    QuerySnapshot querySnapshot = task.getResult();
+                    List<DocumentSnapshot> documents = querySnapshot.getDocuments();
+
+                    for(DocumentSnapshot doc : documents){
+                        int category = (int) Integer.parseInt(doc.get("category").toString());
+                        LongTermGoalsCategories[category]++;
+                    }
+
+                    LongTermGoalsUndoneSize = documents.size();
+
+                    updateChartsLong(rootView);
+                }else{
+
+                }
+            }
+        });
+
+        new FireBaseHandler().getShortTermGoalsDone(uid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    QuerySnapshot querySnapshot = task.getResult();
+                    List<DocumentSnapshot> documents = querySnapshot.getDocuments();
+
+                    for(DocumentSnapshot doc : documents){
+                        int category = (int) Integer.parseInt(doc.get("category").toString());
+                        ShortTermGoalsCategories[category]++;
+                    }
+
+                    ShortTermGoalsDoneSize = documents.size();
+
+                    updateChartsShort(rootView);
+                }else{
+
+                }
+            }
+        });
+
+        new FireBaseHandler().getShortTermGoalsUndone(uid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    QuerySnapshot querySnapshot = task.getResult();
+                    List<DocumentSnapshot> documents = querySnapshot.getDocuments();
+
+                    for(DocumentSnapshot doc : documents){
+                        int category = (int) Integer.parseInt(doc.get("category").toString());
+                        ShortTermGoalsCategories[category]++;
+                    }
+
+                    ShortTermGoalsUndoneSize = documents.size();
+
+                    updateChartsShort(rootView);
+                }else{
+
+                }
+            }
+        });
+    }
+
+    private static void updateChartsAll(View rootView){
+        updateChartsLong(rootView);
+        updateChartsShort(rootView);
+    }
+
+    private static void updateChartsShort(View rootView){
+        Context context = rootView.getContext();
+
+        List<PieEntry> entries_pie_short = new ArrayList<>();
+        entries_pie_short.add(new PieEntry(ShortTermGoalsDoneSize, "Done"));
+        entries_pie_short.add(new PieEntry(ShortTermGoalsUndoneSize, "Undone"));
+
+        PieDataSet set_pie_short = new PieDataSet(entries_pie_short, "");
+        set_pie_short.setColors(new int[] { R.color.colorPrimary, R.color.colorSecondary}, context);
+        PieChart pieChartShort = (PieChart) rootView.findViewById(R.id.pieChartShort);
+        pieChartShort.setCenterText("Short Term Goals");
+        PieData data_pie_short = new PieData(set_pie_short);
+        pieChartShort.setData(data_pie_short);
+        pieChartShort.invalidate(); // refresh
+
+        /// -------
+
+        ArrayList<RadarEntry> entries_short = new ArrayList<>();
+
+        for (int i = 0; i < ShortTermGoalsCategories.length; i++){
+            entries_short.add(new RadarEntry(ShortTermGoalsCategories[i]));
+        }
+
+        RadarDataSet setShort = new RadarDataSet(entries_short, "Short Term");
+        setShort.setColors(new int[] {R.color.colorPrimary, R.color.colorPrimaryLight}, context);
+        setShort.setDrawFilled(true);
+        setShort.setFillAlpha(180);
+        setShort.setLineWidth(2f);
+        setShort.setDrawHighlightCircleEnabled(true);
+        setShort.setDrawHighlightIndicators(false);
+
+        setShort.setValueFormatter(new IValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+                return mCategories[(int) value % mCategories.length];
+            }
+        });
+
+        ArrayList<IRadarDataSet> sets_short = new ArrayList<>();
+        sets_short.add(setShort);
+
+        RadarChart radarChartShort = (RadarChart) rootView.findViewById(R.id.radarChartShort);
+        RadarData data_radar_short = new RadarData(sets_short);
+
+        radarChartShort.setData(data_radar_short);
+        radarChartShort.getYAxis().setDrawLabels(false);
+        radarChartShort.getXAxis().setDrawLabels(false);
+
+        radarChartShort.invalidate(); // refresh
+    }
+
+    private static void updateChartsLong(View rootView){
+
+        Context context = rootView.getContext();
+
+        List<PieEntry> entries_pie_long = new ArrayList<>();
+        entries_pie_long.add(new PieEntry(LongTermGoalsDoneSize, "Done"));
+        entries_pie_long.add(new PieEntry(LongTermGoalsUndoneSize, "Undone"));
+
+        PieDataSet set_pie_long = new PieDataSet(entries_pie_long, "");
+        set_pie_long.setColors(new int[] { R.color.colorPrimary, R.color.colorSecondary}, context);
+        PieChart pieChartLong = (PieChart) rootView.findViewById(R.id.pieChartLong);
+        PieData data_pie_long = new PieData(set_pie_long);
+        pieChartLong.setCenterText("Long Term Goals");
+        pieChartLong.setData(data_pie_long);
+        pieChartLong.invalidate(); // refresh
+
+        /// -------
+
+        ArrayList<RadarEntry> entries_long = new ArrayList<>();
+
+        for (int i = 0; i < LongTermGoalsCategories.length; i++){
+            entries_long.add(new RadarEntry(LongTermGoalsCategories[i]));
+        }
+
+        RadarDataSet setLong = new RadarDataSet(entries_long, "Long Term");
+        setLong.setColors(new int[] {R.color.colorSecondary, R.color.colorSecondaryLight}, context);
+        setLong.setDrawFilled(true);
+        setLong.setFillAlpha(180);
+        setLong.setLineWidth(2f);
+        setLong.setDrawHighlightCircleEnabled(true);
+        setLong.setDrawHighlightIndicators(false);
+
+        setLong.setValueFormatter(new IValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+                return mCategories[(int) value % mCategories.length];
+            }
+        });
+
+        ArrayList<IRadarDataSet> sets_long = new ArrayList<>();
+        sets_long.add(setLong);
+
+        RadarChart radarChartLong = (RadarChart) rootView.findViewById(R.id.radarChartLong);
+        RadarData data_radar_long = new RadarData(sets_long);
+
+        radarChartLong.setData(data_radar_long);
+        radarChartLong.getYAxis().setDrawLabels(false);
+        radarChartLong.getXAxis().setDrawLabels(false);
+
+        radarChartLong.invalidate(); // refresh
     }
 
     /**

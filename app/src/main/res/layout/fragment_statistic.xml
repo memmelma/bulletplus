@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearStatistics"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -11,7 +12,7 @@
         android:orientation="horizontal">
 
         <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/pieChart"
+            android:id="@+id/pieChartShort"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.5">
@@ -19,7 +20,7 @@
         </com.github.mikephil.charting.charts.PieChart>
 
         <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/pieChart2"
+            android:id="@+id/pieChartLong"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.5">
@@ -35,7 +36,7 @@
         android:orientation="horizontal">
 
         <com.github.mikephil.charting.charts.RadarChart
-            android:id="@+id/radarChart"
+            android:id="@+id/radarChartShort"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.5">
@@ -43,7 +44,7 @@
         </com.github.mikephil.charting.charts.RadarChart >
 
         <com.github.mikephil.charting.charts.RadarChart
-            android:id="@+id/radarChart2"
+            android:id="@+id/radarChartLong"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.5">

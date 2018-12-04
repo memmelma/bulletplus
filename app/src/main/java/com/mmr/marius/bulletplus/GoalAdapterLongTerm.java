@@ -76,6 +76,7 @@ public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, 
 
     }
 
+    //TODO category icon bug
     @NonNull
     @Override
     public GoalHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
