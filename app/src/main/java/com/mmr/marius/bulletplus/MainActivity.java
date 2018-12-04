@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int tabPosition = 0;
 
+    private View rootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +119,8 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(MainActivity.this, LoadingActivity.class);
         startActivityForResult(i, REQUEST_CODE_LOAD);
 
+        final View rootView = findViewById(R.id.main_content);
+
         TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -127,8 +130,7 @@ public class MainActivity extends AppCompatActivity {
                 FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.button_add);
 
                 if(tabPosition == 2){
-                    //TODO fix fetch update issue 1 tab to 2 tab no update, 0 tab to 2 tab update
-                    //fetch(tab.view, new FireBaseHandler().getUserID());
+                    Charts.fetchAndUpdate(rootView, new FireBaseHandler().getUserID());
                     fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_sync));
                 } else {
                     fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_add));
@@ -163,8 +165,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 2:
                         String uid = new FireBaseHandler().getUserID();
-
-                        View rootView = findViewById(R.id.linearStatistics);
                         Charts.fetchAndUpdate(rootView, uid);
                 }
 
@@ -186,10 +186,10 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        /*
         if (id == R.id.action_settings) {
             return true;
-        }
+        }*/
         if (id == R.id.action_logout) {
             signOut();
         }
@@ -375,7 +375,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(requestCode) {
             case REQUEST_CODE_LOAD:
-                //TODO remove startActivityWithResult
                 //Log.i(TAG, "returned from loading");
                 //use data.getExtra(...) to retrieve the returned data
                 break;
