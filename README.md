@@ -1,7 +1,10 @@
-based on https://www.youtube.com/watch?v=1YMK2SatG8o
+# Bulletplus
+description
 
-https://thoughts.t37.net/merging-2-different-git-repositories-without-losing-your-history-de7a06bba804
+## Features
 
-Design & TODOs
-
-https://github.com/chthai64/SwipeRevealLayout
+## Frameworks and Repositories used
+SwipeRevealLayout: https://github.com/chthai64/SwipeRevealLayout
+MPANdroidCharts: https://github.com/PhilJay/MPAndroidChart
+FirebaseUI-Android: https://github.com/firebase/FirebaseUI-Android
+Merging two repositories: https://thoughts.t37.net/merging-2-different-git-repositories-without-losing-your-history-de7a06bba804
