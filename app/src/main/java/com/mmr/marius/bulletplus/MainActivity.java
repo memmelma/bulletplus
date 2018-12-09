@@ -284,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
 
                     //Firestore RecyclerView doesn't accept where statements for live bound data -> reorganized database
                     query = new FireBaseHandler().getShortTermGoalsUndone(uid)
-                            .orderBy("created", Query.Direction.DESCENDING);
+                            .orderBy("created", Query.Direction.ASCENDING);
 
                     FirestoreRecyclerOptions<ShortTermGoal> options_short = new FirestoreRecyclerOptions.Builder<ShortTermGoal>()
                             .setQuery(query, ShortTermGoal.class)
@@ -304,7 +304,7 @@ public class MainActivity extends AppCompatActivity {
                     mRecyclerView= (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
                     query = new FireBaseHandler().getLongTermGoalsUndone(uid)
-                            .orderBy("created", Query.Direction.DESCENDING);
+                            .orderBy("created", Query.Direction.ASCENDING);
 
                     FirestoreRecyclerOptions<LongTermGoal> options_long = new FirestoreRecyclerOptions.Builder<LongTermGoal>()
                             .setQuery(query, LongTermGoal.class)
