@@ -17,6 +17,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
 
 import java.util.Date;
@@ -39,7 +40,21 @@ public class FireBaseHandler {
         DocumentReference fromPath = getShortTermGoalsUndone(uid).document(goal_id);
         DocumentReference toPath = getShortTermGoalsDone(uid).document(goal_id);
 
-        moveDocument(fromPath, toPath);
+        fromPath.delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
+                    }
+                });
+
+        //moveDocument(fromPath, toPath);
     }
 
     public CollectionReference getShortTermGoalsUndone(String uid){
@@ -59,7 +74,21 @@ public class FireBaseHandler {
         DocumentReference fromPath = getLongTermGoalsUndone(uid).document(goal_id);
         DocumentReference toPath = getLongTermGoalsDone(uid).document(goal_id);
 
-        moveDocument(fromPath, toPath);
+        fromPath.delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
+                    }
+                });
+
+        //moveDocument(fromPath, toPath);
     }
 
     public CollectionReference getLongTermGoalsUndone(String uid){
@@ -84,6 +113,10 @@ public class FireBaseHandler {
     }
 
     private CollectionReference getCollectionReference(String collectionName){
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build();
+        FirebaseFirestore.getInstance().setFirestoreSettings(settings);
         return FirebaseFirestore.getInstance().collection(collectionName);
     }
 

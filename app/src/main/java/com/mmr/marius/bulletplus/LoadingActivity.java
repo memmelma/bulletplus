@@ -1,7 +1,10 @@
 package com.mmr.marius.bulletplus;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -31,19 +34,29 @@ public class LoadingActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        mAuth = FirebaseAuth.getInstance();
+        ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        mSharedPreferences = PrefSingleton.getInstance();
-        String email = mSharedPreferences.getPreference("email");
-        String password = mSharedPreferences.getPreference("password");
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
 
-        //Log.i(TAG, email + password);
+        if(isConnected) {
+            mAuth = FirebaseAuth.getInstance();
 
-        if(email!="" && password!="" && email!=null && password!=null)
-            signIn(email, password);
-        else{
-            Intent i = new Intent(LoadingActivity.this, AuthActivity.class);
-            startActivityForResult(i, REQUEST_CODE_SIGN_IN);
+            mSharedPreferences = PrefSingleton.getInstance();
+            String email = mSharedPreferences.getPreference("email");
+            String password = mSharedPreferences.getPreference("password");
+
+            //Log.i(TAG, email + password);
+
+            if (email != "" && password != "" && email != null && password != null)
+                signIn(email, password);
+            else {
+                Intent i = new Intent(LoadingActivity.this, AuthActivity.class);
+                startActivityForResult(i, REQUEST_CODE_SIGN_IN);
+            }
+        }else{
+            finish();
         }
     }
 
