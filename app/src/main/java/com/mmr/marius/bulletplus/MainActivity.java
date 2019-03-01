@@ -2,9 +2,11 @@ package com.mmr.marius.bulletplus;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -87,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
 
     private View rootView;
 
+    private boolean first = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,8 +120,12 @@ public class MainActivity extends AppCompatActivity {
         PrefSingleton.getInstance().Initialize(getApplicationContext());
         mPrefSingleton = PrefSingleton.getInstance();
 
-        Intent i = new Intent(MainActivity.this, LoadingActivity.class);
-        startActivityForResult(i, REQUEST_CODE_LOAD);
+        if(savedInstanceState == null || savedInstanceState.getBoolean("first")){
+            Intent i = new Intent(MainActivity.this, LoadingActivity.class);
+            startActivityForResult(i, REQUEST_CODE_LOAD);
+            first = false;
+        }
+
 
         final View rootView = findViewById(R.id.main_content);
 
@@ -195,6 +203,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        outState.putBoolean("first", first);
+        super.onSaveInstanceState(outState, outPersistentState);
     }
 
     private void signOut(){
