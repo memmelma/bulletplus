@@ -11,5 +11,8 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="colorLowerGoal">#62eeff</color>
-    <color name="colorUpperGoal">#00bcd4</color>
+    <color name="colorUpperGoal">#FFFFFF</color>
+    <!--<color name="colorUpperGoal">#00bcd4</color>-->
+
+    <color name="grey">#80000000</color>
 </resources>

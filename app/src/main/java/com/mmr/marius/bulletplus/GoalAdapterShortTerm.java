@@ -1,5 +1,8 @@
 package com.mmr.marius.bulletplus;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
@@ -27,15 +30,16 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
     private final ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
 
     private FireBaseHandler fbh;
-
+    private Activity mActivity;
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
      * FirestoreRecyclerOptions} for configuration options.
      *
      * @param options
      */
-    public GoalAdapterShortTerm(@NonNull FirestoreRecyclerOptions<ShortTermGoal> options) {
+    public GoalAdapterShortTerm(@NonNull FirestoreRecyclerOptions<ShortTermGoal> options, Activity activity) {
         super(options);
+        this.mActivity = activity;
         this.fbh = new FireBaseHandler();
     }
 
@@ -67,7 +71,24 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
         holder.mImageButtonRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fbh.rmShortTermGoal(doc_id, new FireBaseHandler().getUserID());
+                AlertDialog dialog = new AlertDialog
+                        .Builder(mActivity)
+                        .setMessage("You are about to set this goal to done!")
+                        .setTitle("Attention")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                fbh.rmShortTermGoal(doc_id, new FireBaseHandler().getUserID());
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .create();
+                dialog.show();
             }
         });
     }
@@ -75,11 +96,11 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
     @NonNull
     @Override
     public GoalAdapterShortTerm.GoalHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v  = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.goal_item,
+        View v  = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.goal_item_short,
                 viewGroup, false);
 
-        CardView mCardView = v.findViewById(R.id.card_view);
-        mCardView.setBackgroundColor(v.findViewById(R.id.card_view).getResources().getColor(R.color.colorLowerGoal));
+        //CardView mCardView = v.findViewById(R.id.card_view);
+        //mCardView.setBackgroundColor(v.findViewById(R.id.card_view).getResources().getColor(R.color.colorLowerGoal));
 
         return new GoalAdapterShortTerm.GoalHolder(v);
     }
@@ -87,7 +108,8 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
     class GoalHolder extends RecyclerView.ViewHolder {
 
         TextView mTextViewTitle;
-        TextView mTextViewCreated;
+        TextView mTextViewDescription;
+        TextView mTextViewDetail;
         ImageView mImageViewCategory;
         SwipeRevealLayout mSwipeRevealLayout;
         ImageButton mImageButtonRemove;
@@ -95,7 +117,8 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
         public GoalHolder(View v) {
             super(v);
             mTextViewTitle = (TextView) v.findViewById(R.id.text_view_title);
-            //mTextViewCreated = v.findViewById(R.id.text_view_created);
+            mTextViewDescription = (TextView) v.findViewById(R.id.text_view_title);
+            mTextViewDetail = v.findViewById(R.id.text_view_detail);
             mImageViewCategory = (ImageView) v.findViewById(R.id.imageViewCategory);
             mSwipeRevealLayout = (SwipeRevealLayout) v.findViewById(R.id.swipeRevealLayout);
             mImageButtonRemove = (ImageButton) v.findViewById(R.id.removeGoal);

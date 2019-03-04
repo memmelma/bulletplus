@@ -1,12 +1,14 @@
 package com.mmr.marius.bulletplus;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.RadioGroup;
@@ -44,11 +46,19 @@ public class NewGoalActivity extends AppCompatActivity {
                 return;
         }
 
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-        setTitle("Add " + type + " goal");
+        //getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
+        //setTitle("Add " + type + " goal");
 
         mEditTextGoal = (EditText) findViewById(R.id.edit_goal_title);
         mRadioGroup = (RadioGroup) findViewById(R.id.radioGroupCategories);
+
+        FloatingActionButton mButtonAddNote = findViewById(R.id.button_save);
+        mButtonAddNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveGoal();
+            }
+        });
     }
 
     @Override

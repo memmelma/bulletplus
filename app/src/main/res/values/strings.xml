@@ -23,11 +23,12 @@
     <string name="action_logout">Log out</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="new_goal_hint">Goal</string>
+    <string name="new_description_hint">Description</string>
     <string name="done_total">Done Total:\u0020</string>
     <string name="undone_total">Undone Total:\u0020</string>
 
     <string name="chart_type_0">Pie Chart</string>
     <string name="chart_type_1">Radar Chart</string>
     <string name="chart_data_0">Short Term</string>
-    <string name="chart_data_1">Long Term</string>
+    <string name="chart_data_1">Long Term</string>=
 </resources>

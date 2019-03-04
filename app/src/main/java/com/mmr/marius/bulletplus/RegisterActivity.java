@@ -39,7 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         mEmail = findViewById(R.id.register_email);
         mPassword_1 = findViewById(R.id.register_password_1);
-        mPassword_2 = findViewById(R.id.register_password_2);
+        //mPassword_2 = findViewById(R.id.register_password_2);
 
         mRegisterButton = findViewById(R.id.email_register_button);
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
@@ -47,15 +47,15 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email = mEmail.getText().toString().trim();
                 String password_1 = mPassword_1.getText().toString();
-                String password_2 = mPassword_2.getText().toString();
+                //String password_2 = mPassword_2.getText().toString();
 
-                Log.i(TAG, email + " - " + password_1 + " - " + password_2);
+                //Log.i(TAG, email + " - " + password_1 + " - " + password_2);
 
-                if(!password_1.matches(password_2)){
+                /*if(!password_1.matches(password_2)){
                     Toast.makeText(RegisterActivity.this, "Passwords must be identical",
                             Toast.LENGTH_SHORT).show();
                     return;
-                }
+                }*/
 
                 if(!email.matches("") && !password_1.matches("")){
 

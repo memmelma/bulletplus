@@ -1,6 +1,8 @@
 package com.mmr.marius.bulletplus;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
@@ -304,7 +306,7 @@ public class MainActivity extends AppCompatActivity {
                             .setQuery(query, ShortTermGoal.class)
                             .build();
 
-                    mAdapterShortTerm = new GoalAdapterShortTerm(options_short);
+                    mAdapterShortTerm = new GoalAdapterShortTerm(options_short, getActivity());
 
                     mRecyclerView.setHasFixedSize(true);
                     mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -324,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
                             .setQuery(query, LongTermGoal.class)
                             .build();
 
-                    mAdapterLongTerm = new GoalAdapterLongTerm(options_long);
+                    mAdapterLongTerm = new GoalAdapterLongTerm(options_long, getActivity());
 
                     mRecyclerView.setHasFixedSize(true);
                     mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

@@ -1,6 +1,7 @@
 package com.mmr.marius.bulletplus;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;

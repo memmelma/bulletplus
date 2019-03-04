@@ -1,5 +1,8 @@
 package com.mmr.marius.bulletplus;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.constraint.solver.widgets.Snapshot;
 import android.support.v7.widget.CardView;
@@ -22,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import org.w3c.dom.Text;
 
+import java.nio.channels.AcceptPendingException;
 import java.util.Date;
 
 public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, GoalAdapterLongTerm.GoalHolder> {
@@ -31,14 +35,16 @@ public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, 
     private final ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
 
     private FireBaseHandler fbh;
+    private Activity mActivity;
     /**
      * Create a new RecyclerView adapter that listens to a Firestore Query.  See {@link
      * FirestoreRecyclerOptions} for configuration options.
      *
      * @param options
      */
-    public GoalAdapterLongTerm(@NonNull FirestoreRecyclerOptions<LongTermGoal> options) {
+    public GoalAdapterLongTerm(@NonNull FirestoreRecyclerOptions<LongTermGoal> options, Activity activity) {
         super(options);
+        this.mActivity = activity;
         this.fbh = new FireBaseHandler();
     }
 
@@ -71,7 +77,24 @@ public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, 
         holder.mImageButtonRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fbh.rmLongTermGoal(doc_id, new FireBaseHandler().getUserID());
+                AlertDialog dialog = new AlertDialog
+                        .Builder(mActivity)
+                        .setMessage("You are about to set this goal to done!")
+                        .setTitle("Attention")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                fbh.rmLongTermGoal(doc_id, new FireBaseHandler().getUserID());
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .create();
+                dialog.show();
             }
         });
 
@@ -81,11 +104,11 @@ public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, 
     @NonNull
     @Override
     public GoalHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v  = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.goal_item,
+        View v  = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.goal_item_long,
                 viewGroup, false);
 
-        CardView mCardView = v.findViewById(R.id.card_view);
-        mCardView.setBackgroundColor(v.findViewById(R.id.card_view).getResources().getColor(R.color.colorUpperGoal));
+        //CardView mCardView = v.findViewById(R.id.card_view);
+        //mCardView.setBackgroundColor(v.findViewById(R.id.card_view).getResources().getColor(R.color.colorUpperGoal));
 
         return new GoalHolder(v);
     }
@@ -93,7 +116,8 @@ public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, 
     class GoalHolder extends RecyclerView.ViewHolder {
 
         TextView mTextViewTitle;
-        TextView mTextViewCreated;
+        TextView mTextViewDescription;
+        TextView mTextViewDetail;
         ImageView mImageViewCategory;
         SwipeRevealLayout mSwipeRevealLayout;
         ImageButton mImageButtonRemove;
@@ -101,7 +125,8 @@ public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, 
         public GoalHolder(View v) {
             super(v);
             mTextViewTitle = (TextView) v.findViewById(R.id.text_view_title);
-            //mTextViewCreated = v.findViewById(R.id.text_view_created);
+            mTextViewDescription = (TextView) v.findViewById(R.id.text_view_title);
+            mTextViewDetail = v.findViewById(R.id.text_view_detail);
             mImageViewCategory = (ImageView) v.findViewById(R.id.imageViewCategory);
             mSwipeRevealLayout = (SwipeRevealLayout) v.findViewById(R.id.swipeRevealLayout);
             mImageButtonRemove = (ImageButton) v.findViewById(R.id.removeGoal);
