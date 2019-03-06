@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -59,14 +60,14 @@ public class GoalAdapterAddShortTerm extends FirestoreRecyclerAdapter<LongTermGo
         if(mSelectionId == null)
             mSelectionId = modelId;
 
-        holder.mCardView.setOnClickListener(new View.OnClickListener() {
+        holder.mConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mSelectionId = modelId;
                 notifyDataSetChanged();
             }
         });
-        if(model.getTitle() == mSelectionId)
+        if(model.getTitle().equals(mSelectionId))
             holder.mCheckBox.setChecked(true);
         else{
             holder.mCheckBox.setChecked(false);
@@ -108,14 +109,14 @@ public class GoalAdapterAddShortTerm extends FirestoreRecyclerAdapter<LongTermGo
         ImageView mImageViewCategory;
         CheckBox mCheckBox;
         String mId;
-        CardView mCardView;
+        ConstraintLayout mConstraintLayout;
 
         public GoalHolder(View v) {
             super(v);
             mTextViewTitle = (TextView) v.findViewById(R.id.text_view_title);
             mImageViewCategory = (ImageView) v.findViewById(R.id.image_view_category);
             mCheckBox = (CheckBox) v.findViewById(R.id.check_box);
-            mCardView = (CardView) v.findViewById(R.id.card_view);
+            mConstraintLayout = (ConstraintLayout) v.findViewById(R.id.layout_constraint);
         }
     }
 }

@@ -113,9 +113,9 @@ public class FireBaseHandler {
         return getUser().getUid();
     }
 
-    private CollectionReference getCollectionReference(String collectionName){
+    public CollectionReference getCollectionReference(String collectionName){
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setPersistenceEnabled(true)
+                //.setPersistenceEnabled(true)
                 .build();
         FirebaseFirestore.getInstance().setFirestoreSettings(settings);
         return FirebaseFirestore.getInstance().collection(collectionName);

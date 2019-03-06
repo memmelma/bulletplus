@@ -2,6 +2,7 @@ package com.mmr.marius.bulletplus;
 
 import android.content.Intent;
 import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,9 +25,16 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.Collection;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -267,9 +276,17 @@ public class MainActivity extends AppCompatActivity {
                     mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
                     //Firestore RecyclerView doesn't accept where statements for live bound data -> reorganized database
-                    query = new FireBaseHandler().getShortTermGoalsUndone(uid)
+                    //query = new FireBaseHandler().getShortTermGoalsUndone(uid)
+                    //        .orderBy("created", Query.Direction.ASCENDING);
+
+                    //
+
+                    query = new FireBaseHandler().getCollectionReference("test_collection")
+                            .whereEqualTo("user", "testuser")
+                            .whereEqualTo("done", false)
                             .orderBy("created", Query.Direction.ASCENDING);
 
+                    //
                     FirestoreRecyclerOptions<ShortTermGoal> options_short = new FirestoreRecyclerOptions.Builder<ShortTermGoal>()
                             .setQuery(query, ShortTermGoal.class)
                             .build();
