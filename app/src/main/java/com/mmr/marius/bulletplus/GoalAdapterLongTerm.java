@@ -56,22 +56,34 @@ public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, 
         viewBinderHelper.bind(holder.mSwipeRevealLayout, doc_id);
 
         holder.mTextViewTitle.setText(model.getTitle());
+        holder.mTextViewDescription.setText(model.getDescription());
         //holder.mTextViewCreated.setText(new SimpleDateFormat("yyyy-MM-dd").format(model.getCreated()));
 
+        int imageResource = 0;
         switch ((int) model.getCategory()){
             case 0:
-                holder.mImageViewCategory.setImageResource(R.drawable.ic_personal);
+                imageResource = R.drawable.ic_personal;
                 break;
             case 1:
-                holder.mImageViewCategory.setImageResource(R.drawable.ic_social);
+                imageResource = R.drawable.ic_social;
                 break;
             case 2:
-                holder.mImageViewCategory.setImageResource(R.drawable.ic_health);
+                imageResource = R.drawable.ic_health;
                 break;
             case 3:
-                holder.mImageViewCategory.setImageResource(R.drawable.ic_professional);
+                imageResource = R.drawable.ic_professional;
                 break;
         }
+        holder.mImageViewCategory.setImageResource(imageResource);
+
+        holder.mImageButtonDone.bringToFront();
+        holder.mImageButtonDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, doc_id);
+                fbh.setDoneLongTermGoal(doc_id);
+            }
+        });
 
         holder.mImageButtonRemove.bringToFront();
         holder.mImageButtonRemove.setOnClickListener(new View.OnClickListener() {
@@ -84,7 +96,8 @@ public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, 
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                fbh.rmLongTermGoal(doc_id, new FireBaseHandler().getUserID());
+                                Log.i(TAG, doc_id);
+                                fbh.rmLongTermGoal(doc_id);
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -121,15 +134,17 @@ public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, 
         ImageView mImageViewCategory;
         SwipeRevealLayout mSwipeRevealLayout;
         ImageButton mImageButtonRemove;
+        ImageButton mImageButtonDone;
 
         public GoalHolder(View v) {
             super(v);
             mTextViewTitle = (TextView) v.findViewById(R.id.text_view_title);
-            mTextViewDescription = (TextView) v.findViewById(R.id.text_view_title);
+            mTextViewDescription = (TextView) v.findViewById(R.id.text_view_description);
             mTextViewDetail = v.findViewById(R.id.text_view_detail);
             mImageViewCategory = (ImageView) v.findViewById(R.id.imageViewCategory);
             mSwipeRevealLayout = (SwipeRevealLayout) v.findViewById(R.id.swipeRevealLayout);
             mImageButtonRemove = (ImageButton) v.findViewById(R.id.removeGoal);
+            mImageButtonDone = (ImageButton) v.findViewById(R.id.doneGoal);
         }
     }
 }

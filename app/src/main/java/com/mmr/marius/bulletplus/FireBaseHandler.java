@@ -22,30 +22,31 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class FireBaseHandler {
     private final static String TAG = "com.marius.fbhandler";
 
     private FirebaseAuth mAuth;
+    private final String short_term_collection = "fuel";
+    private final String long_term_collection = "engine";
 
     public FireBaseHandler(){
         mAuth = FirebaseAuth.getInstance();
     }
 
-    public void addShortTermGoal(ShortTermGoal stg, String uid){
-        getShortTermGoalsUndone(uid).add(stg);
+    public void addShortTermGoal(ShortTermGoal stg){
+        getCollectionReference(short_term_collection).add(stg);
     }
 
-    public void rmShortTermGoal(String goal_id, String uid){
-        DocumentReference fromPath = getShortTermGoalsUndone(uid).document(goal_id);
-        DocumentReference toPath = getShortTermGoalsDone(uid).document(goal_id);
-
-        fromPath.delete()
+    public void rmShortTermGoal(String goalId){
+        getCollectionReference(short_term_collection).document(goalId).delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                        Log.d(TAG, "Document successfully deleted!");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -54,32 +55,14 @@ public class FireBaseHandler {
                         Log.w(TAG, "Error deleting document", e);
                     }
                 });
-
-        //moveDocument(fromPath, toPath);
     }
 
-    public CollectionReference getShortTermGoalsUndone(String uid){
-        return getCollectionReference("short_term_goals/" + uid + "/undone");
-    }
-
-    public CollectionReference getShortTermGoalsDone(String uid){
-        return getCollectionReference("short_term_goals/" + uid + "/done");
-    }
-
-    public void addLongTermGoal(LongTermGoal ltg, String uid){
-        getLongTermGoalsUndone(uid).add(ltg);
-    }
-
-    public void rmLongTermGoal(String goal_id, String uid){
-        Log.i(TAG, "goal_id " + goal_id);
-        DocumentReference fromPath = getLongTermGoalsUndone(uid).document(goal_id);
-        DocumentReference toPath = getLongTermGoalsDone(uid).document(goal_id);
-
-        fromPath.delete()
+    public void setDoneShortTermGoal(String goalId){
+        getCollectionReference(short_term_collection).document(goalId).update("done", true)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                        Log.d(TAG, "Document successfully set done!");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -88,20 +71,50 @@ public class FireBaseHandler {
                         Log.w(TAG, "Error deleting document", e);
                     }
                 });
-
-        //moveDocument(fromPath, toPath);
     }
 
-    public CollectionReference getLongTermGoalsUndone(String uid){
-        return getCollectionReference("long_term_goals/" + uid + "/undone");
+    public CollectionReference getShortTermGoals(){
+        return getCollectionReference(short_term_collection);
     }
 
-    public CollectionReference getLongTermGoalsDone(String uid){
-        return getCollectionReference("long_term_goals/" + uid + "/done");
+    public void addLongTermGoal(LongTermGoal ltg){
+        getCollectionReference(long_term_collection).add(ltg);
     }
 
-    public void addUser(User  user){
-        getCollectionReference("users").add(user);
+    public  void rmLongTermGoal (String goalId){
+        getCollectionReference(long_term_collection).document(goalId).delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Document successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
+                    }
+                });
+    }
+
+    public void setDoneLongTermGoal(String goalId){
+        getCollectionReference(long_term_collection).document(goalId).update("done", true)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Document successfully set done!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
+                    }
+                });
+    }
+
+    public CollectionReference getLongTermGoals(){
+        return getCollectionReference(long_term_collection);
     }
 
     public FirebaseUser getUser(){
@@ -120,7 +133,7 @@ public class FireBaseHandler {
         FirebaseFirestore.getInstance().setFirestoreSettings(settings);
         return FirebaseFirestore.getInstance().collection(collectionName);
     }
-
+/*
     public void moveDocument(final DocumentReference fromPath, final DocumentReference toPath) {
         fromPath.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -163,5 +176,5 @@ public class FireBaseHandler {
             }
         });
     }
-
+*/
 }

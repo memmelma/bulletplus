@@ -46,6 +46,10 @@ public class GoalAdapterAddShortTerm extends FirestoreRecyclerAdapter<LongTermGo
 
     String mSelectionId = null;
 
+    public String getSelectionId(){
+        return mSelectionId;
+    }
+
     @Override
     protected void onBindViewHolder(@NonNull GoalHolder holder, int position, @NonNull final LongTermGoal model) {
 
@@ -54,8 +58,9 @@ public class GoalAdapterAddShortTerm extends FirestoreRecyclerAdapter<LongTermGo
         holder.mTextViewTitle.setText(model.getTitle());
         //holder.mTextViewCreated.setText(new SimpleDateFormat("yyyy-MM-dd").format(model.getCreated()));
 
-        final String modelId = model.getTitle();//model.getId();
-        holder.mId = modelId;
+        final String modelId = model.getId();
+
+        Log.i(TAG, modelId);
 
         if(mSelectionId == null)
             mSelectionId = modelId;
@@ -67,30 +72,32 @@ public class GoalAdapterAddShortTerm extends FirestoreRecyclerAdapter<LongTermGo
                 notifyDataSetChanged();
             }
         });
-        if(model.getTitle().equals(mSelectionId))
+
+        if(modelId.equals(mSelectionId))
             holder.mCheckBox.setChecked(true);
         else{
             holder.mCheckBox.setChecked(false);
         }
 
+        int imageResource = 0;
         switch ((int) model.getCategory()){
             case 0:
-                holder.mImageViewCategory.setImageResource(R.drawable.ic_personal);
+                imageResource = R.drawable.ic_personal;
                 break;
             case 1:
-                holder.mImageViewCategory.setImageResource(R.drawable.ic_social);
+                imageResource = R.drawable.ic_social;
                 break;
             case 2:
-                holder.mImageViewCategory.setImageResource(R.drawable.ic_health);
+                imageResource = R.drawable.ic_health;
                 break;
             case 3:
-                holder.mImageViewCategory.setImageResource(R.drawable.ic_professional);
+                imageResource = R.drawable.ic_professional;
                 break;
         }
+        holder.mImageViewCategory.setImageResource(imageResource);
 
     }
 
-    //TODO category icon bug
     @NonNull
     @Override
     public GoalHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -108,8 +115,8 @@ public class GoalAdapterAddShortTerm extends FirestoreRecyclerAdapter<LongTermGo
         TextView mTextViewTitle;
         ImageView mImageViewCategory;
         CheckBox mCheckBox;
-        String mId;
         ConstraintLayout mConstraintLayout;
+        RecyclerView mRecyclerView;
 
         public GoalHolder(View v) {
             super(v);
@@ -117,6 +124,7 @@ public class GoalAdapterAddShortTerm extends FirestoreRecyclerAdapter<LongTermGo
             mImageViewCategory = (ImageView) v.findViewById(R.id.image_view_category);
             mCheckBox = (CheckBox) v.findViewById(R.id.check_box);
             mConstraintLayout = (ConstraintLayout) v.findViewById(R.id.layout_constraint);
+            mRecyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
         }
     }
 }

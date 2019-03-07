@@ -281,8 +281,8 @@ public class MainActivity extends AppCompatActivity {
 
                     //
 
-                    query = new FireBaseHandler().getCollectionReference("test_collection")
-                            .whereEqualTo("user", "testuser")
+                    query = new FireBaseHandler().getShortTermGoals()
+                            .whereEqualTo("userId", uid)
                             .whereEqualTo("done", false)
                             .orderBy("created", Query.Direction.ASCENDING);
 
@@ -304,7 +304,9 @@ public class MainActivity extends AppCompatActivity {
                     rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
                     mRecyclerView= (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
-                    query = new FireBaseHandler().getLongTermGoalsUndone(uid)
+                    query = new FireBaseHandler().getLongTermGoals()
+                            .whereEqualTo("userId", uid)
+                            .whereEqualTo("done", false)
                             .orderBy("created", Query.Direction.ASCENDING);
 
                     FirestoreRecyclerOptions<LongTermGoal> options_long = new FirestoreRecyclerOptions.Builder<LongTermGoal>()

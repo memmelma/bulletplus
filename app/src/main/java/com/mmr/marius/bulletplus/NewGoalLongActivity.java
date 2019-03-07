@@ -15,11 +15,8 @@ import android.widget.Toast;
 public class NewGoalLongActivity extends AppCompatActivity {
 
     private EditText mEditTextGoal;
+    private EditText mEditTextDescription;
     private RadioGroup mRadioGroup;
-
-    private String type;
-    private final String type_long = "long-term";
-    private final String type_short = "short-term";
 
     private final static String TAG = "com.marius.newgoal";
 
@@ -28,24 +25,11 @@ public class NewGoalLongActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_goal_long);
 
-        Intent i = getIntent();
-        int extra = i.getIntExtra(MainActivity.TAG, 0);
-
-        switch(extra){
-            case 0:
-                type = type_short;
-                break;
-            case 1:
-                type = type_long;
-                break;
-            default:
-                return;
-        }
-
         //getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
         //setTitle("Add " + type + " goal");
 
         mEditTextGoal = (EditText) findViewById(R.id.edit_goal_title);
+        mEditTextDescription = (EditText) findViewById(R.id.edit_goal_description);
         mRadioGroup = (RadioGroup) findViewById(R.id.radioGroupCategories);
 
         FloatingActionButton mButtonAddNote = findViewById(R.id.button_save);
@@ -104,26 +88,19 @@ public class NewGoalLongActivity extends AppCompatActivity {
         }
 
         String goalTitle = mEditTextGoal.getText().toString();
+        String goalDescription = mEditTextDescription.getText().toString();
 
         if(goalTitle.trim().isEmpty()){
             Toast.makeText(this, "Please insert a goal",Toast.LENGTH_SHORT).show();
             return;
         }
 
-        //Log.i(TAG, "category " + category + " title " + goalTitle);
-
         FireBaseHandler fbh = new FireBaseHandler();
         String uid = fbh.getUserID();
 
-        if(type.equals(type_short)){
-            ShortTermGoal stg = new ShortTermGoal(goalTitle, category);
-            fbh.addShortTermGoal(stg, uid);
-            Toast.makeText(this, type_short + " goal added", Toast.LENGTH_SHORT).show();
-        } else{
-            LongTermGoal ltg = new LongTermGoal(goalTitle, category);
-            fbh.addLongTermGoal(ltg, uid);
-            Toast.makeText(this, type_long + " goal added", Toast.LENGTH_SHORT).show();
-        }
+        LongTermGoal ltg = new LongTermGoal(goalTitle, goalDescription, fbh.getUserID(), category);
+        fbh.addLongTermGoal(ltg);
+        Toast.makeText(this, "long term goal added", Toast.LENGTH_SHORT).show();
 
         finish();
     }

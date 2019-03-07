@@ -34,29 +34,32 @@ public class NewGoalShortActivity extends AppCompatActivity {
         mRadioGroup = (RadioGroup) findViewById(R.id.radioGroupCategories);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
-        FloatingActionButton mButtonAddNote = findViewById(R.id.button_save);
-        mButtonAddNote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveGoal();
-            }
-        });
+        FireBaseHandler fbh = new FireBaseHandler();
 
-
-        Query query = new FireBaseHandler().getLongTermGoalsUndone(new FireBaseHandler().getUserID())
+        Query query = fbh.getLongTermGoals()
+                .whereEqualTo("userId", fbh.getUserID())
+                .whereEqualTo("done", false)
                 .orderBy("created", Query.Direction.ASCENDING);
 
         FirestoreRecyclerOptions<LongTermGoal> options_long = new FirestoreRecyclerOptions.Builder<LongTermGoal>()
                 .setQuery(query, LongTermGoal.class)
                 .build();
 
-        GoalAdapterAddShortTerm mAdapterLongTerm = new GoalAdapterAddShortTerm(options_long);
+        final GoalAdapterAddShortTerm mAdapterLongTerm = new GoalAdapterAddShortTerm(options_long);
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(new Activity()));
         mRecyclerView.setAdapter(mAdapterLongTerm);
 
         mAdapterLongTerm.startListening();
+
+        FloatingActionButton mButtonAddNote = findViewById(R.id.button_save);
+        mButtonAddNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveGoal(mAdapterLongTerm);
+            }
+        });
 
     }
 
@@ -70,18 +73,13 @@ public class NewGoalShortActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.save_goal:
-                saveGoal();
-                return true;
-
-            //add more cases here for different menu items
 
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void saveGoal(){
+    private void saveGoal(GoalAdapterAddShortTerm goalAdapterAddShortTerm){
 
         int selectedId = mRadioGroup.getCheckedRadioButtonId();
 
@@ -108,6 +106,8 @@ public class NewGoalShortActivity extends AppCompatActivity {
 
         String goalTitle = mEditTextGoal.getText().toString();
 
+        String longTermGoalId = goalAdapterAddShortTerm.getSelectionId();
+
         if(goalTitle.trim().isEmpty()){
             Toast.makeText(this, "Please insert a goal",Toast.LENGTH_SHORT).show();
             return;
@@ -118,8 +118,8 @@ public class NewGoalShortActivity extends AppCompatActivity {
         FireBaseHandler fbh = new FireBaseHandler();
         String uid = fbh.getUserID();
 
-        ShortTermGoal stg = new ShortTermGoal(goalTitle, category);
-        fbh.addShortTermGoal(stg, uid);
+        ShortTermGoal stg = new ShortTermGoal(goalTitle, fbh.getUserID(), longTermGoalId, category);
+        fbh.addShortTermGoal(stg);
         Toast.makeText(this, "short goal added", Toast.LENGTH_SHORT).show();
 
 

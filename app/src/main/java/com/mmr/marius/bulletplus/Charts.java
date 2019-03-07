@@ -94,6 +94,7 @@ public class Charts {
 
     public static void fetchAndUpdate(final View rootView, String uid){
 
+        /*
         Log.i(TAG, "fetching...");
 
         LongTermGoalsCategories = new int[] {0, 0, 0, 0};
@@ -144,6 +145,7 @@ public class Charts {
             }
         });
 
+
         new FireBaseHandler().getShortTermGoalsDone(uid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -187,6 +189,7 @@ public class Charts {
                 }
             }
         });
+        */
     }
 
     private static void updateChartsShort(View rootView){

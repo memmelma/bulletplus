@@ -6,32 +6,50 @@ import java.util.Date;
 
 public class LongTermGoal {
     private static final String TAG = "com.marius.longtermgoal";
-    private Date created;
     private String title;
+    private String description;
+    private String userId;
+    private Date created;
     private long category;
     private String id;
+    private Boolean done;
 
     public LongTermGoal(){
         //needed for FireBase
     }
 
-    public LongTermGoal(String title, long category){
+    public LongTermGoal(String title, String description, String userId, long category){
         this.title = title;
+        this.description = description;
+        this.userId = userId;
         this.created = new Date();
         this.category = category;
-        this.id = md5(this.title + this.created + this.category);
-    }
-
-    public Date getCreated() {
-        return created;
+        this.done = false;
+        this.id = md5(this.title + this.description + this.userId + this.created + this.category);
     }
 
     public String getTitle() {
         return title;
     }
 
+    public String getDescription(){
+        return description;
+    }
+
+    public String getUserId(){
+        return userId;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
     public long getCategory() {
         return category;
+    }
+
+    public Boolean getDone(){
+        return done;
     }
 
     public String getId(){

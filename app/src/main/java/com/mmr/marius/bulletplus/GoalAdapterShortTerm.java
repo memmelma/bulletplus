@@ -68,6 +68,13 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
                 break;
         }
 
+        holder.mImageButtonDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fbh.setDoneShortTermGoal(doc_id);
+            }
+        });
+
         holder.mImageButtonRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,7 +85,7 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                fbh.rmShortTermGoal(doc_id, new FireBaseHandler().getUserID());
+                                fbh.rmShortTermGoal(doc_id);
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -99,9 +106,6 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
         View v  = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.goal_item_short,
                 viewGroup, false);
 
-        //CardView mCardView = v.findViewById(R.id.card_view);
-        //mCardView.setBackgroundColor(v.findViewById(R.id.card_view).getResources().getColor(R.color.colorLowerGoal));
-
         return new GoalAdapterShortTerm.GoalHolder(v);
     }
 
@@ -113,6 +117,7 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
         ImageView mImageViewCategory;
         SwipeRevealLayout mSwipeRevealLayout;
         ImageButton mImageButtonRemove;
+        ImageButton mImageButtonDone;
 
         public GoalHolder(View v) {
             super(v);
@@ -122,6 +127,7 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
             mImageViewCategory = (ImageView) v.findViewById(R.id.imageViewCategory);
             mSwipeRevealLayout = (SwipeRevealLayout) v.findViewById(R.id.swipeRevealLayout);
             mImageButtonRemove = (ImageButton) v.findViewById(R.id.removeGoal);
+            mImageButtonDone = (ImageButton) v.findViewById(R.id.doneGoal);
         }
     }
 }
