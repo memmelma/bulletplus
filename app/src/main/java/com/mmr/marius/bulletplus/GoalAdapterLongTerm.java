@@ -62,6 +62,7 @@ public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, 
 
         holder.mTextViewTitle.setText(model.getTitle());
         holder.mTextViewDescription.setText(model.getDescription());
+        holder.mTextViewDetail.setText(String.format(mActivity.getResources().getString(R.string.long_term_goal_detail),Integer.toString(model.getDone_count()),Integer.toString(model.getAll_count())));
         //holder.mTextViewCreated.setText(new SimpleDateFormat("yyyy-MM-dd").format(model.getCreated()));
 
         int imageResource = 0;
@@ -96,16 +97,15 @@ public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, 
             public void onClick(View v) {
                 AlertDialog dialog = new AlertDialog
                         .Builder(mActivity)
-                        .setMessage("You are about to set this goal to done!")
-                        .setTitle("Attention")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        .setMessage(String.format(mActivity.getResources().getString(R.string.delete_prompt), mActivity.getResources().getString(R.string.long_term_goal)))
+                        .setTitle(mActivity.getResources().getString(R.string.delete_title))
+                        .setPositiveButton(mActivity.getResources().getString(R.string.delete_ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Log.i(TAG, doc_id);
                                 fbh.rmLongTermGoal(doc_id);
                             }
                         })
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        .setNegativeButton(mActivity.getResources().getString(R.string.delete_cancel), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 

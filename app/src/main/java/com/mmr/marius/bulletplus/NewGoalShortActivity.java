@@ -31,13 +31,14 @@ public class NewGoalShortActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_goal_short);
 
         mEditTextGoal = (EditText) findViewById(R.id.edit_goal_title);
+        mEditTextGoal.setHint(String.format(getResources().getString(R.string.new_goal_hint), getResources().getString(R.string.short_term_goal)));
         mRadioGroup = (RadioGroup) findViewById(R.id.radioGroupCategories);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         FireBaseHandler fbh = new FireBaseHandler();
 
         Query query = fbh.getLongTermGoals()
-                .whereEqualTo("userId", fbh.getUserID())
+                .whereEqualTo("user_id", fbh.getUserID())
                 .whereEqualTo("done", false)
                 .orderBy("created", Query.Direction.ASCENDING);
 
@@ -110,19 +111,19 @@ public class NewGoalShortActivity extends AppCompatActivity {
         String longTermGoalTitle = goalAdapterAddShortTerm.getSelectionTitle();
 
         if(goalTitle.trim().isEmpty()){
-            Toast.makeText(this, "Please insert a goal",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, String.format(getResources().getString(R.string.short_term_goal_add_prompt1), getResources().getString(R.string.short_term_goal)),Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else if(longTermGoalId == null){
+            Toast.makeText(this, String.format(getResources().getString(R.string.short_term_goal_add_prompt2), getResources().getString(R.string.long_term_goal)),Toast.LENGTH_SHORT).show();
             return;
         }
 
-        //Log.i(TAG, "category " + category + " title " + goalTitle);
-
         FireBaseHandler fbh = new FireBaseHandler();
-        String uid = fbh.getUserID();
 
         ShortTermGoal stg = new ShortTermGoal(goalTitle, fbh.getUserID(), longTermGoalId, longTermGoalTitle, category);
         fbh.addShortTermGoal(stg);
-        Toast.makeText(this, "short goal added", Toast.LENGTH_SHORT).show();
-
+        Toast.makeText(this, String.format(getResources().getString(R.string.short_term_goal_add_prompt3), getResources().getString(R.string.short_term_goal)), Toast.LENGTH_SHORT).show();
 
         finish();
     }

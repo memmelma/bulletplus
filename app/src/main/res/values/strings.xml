@@ -13,16 +13,29 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <string name="long_term_goal">Engine</string>
+    <string name="short_term_goal">Fuel</string>
+    <string name="statistics">Statistics</string>
+    <string name="final_goal">Rocket</string>
+    <string name="short_term_goal_description">%1$s: %2$s</string>
+    <string name="short_term_goal_add_prompt1">Please insert a %1$s Name.</string>
+    <string name="short_term_goal_add_prompt2">Please create an %1$s first.</string>
+    <string name="short_term_goal_add_prompt3">%1$s added successfully.</string>
+    <string name="long_term_goal_detail">%1$s/%2$s</string>
+
+    <string name="delete_prompt">You are about to delete this %1$s!</string>
+    <string name="delete_title">Attention</string>
+    <string name="delete_ok">OK</string>
+    <string name="delete_cancel">Cancel</string>
+    <string name="logged_out">Logged out</string>
     <string name="action_register">Register</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_main_experimental">MainActivityExperimental</string>
-    <string name="tab_text_1">Short Term</string>
-    <string name="tab_text_2">Long Term</string>
-    <string name="tab_text_3">Statistics</string>
     <string name="action_settings">Settings</string>
     <string name="action_logout">Log out</string>
     <string name="section_format">Hello World from section: %1$d</string>
-    <string name="new_goal_hint">Goal</string>
+    <string name="new_goal_hint">%1$s Name</string>
     <string name="new_description_hint">Description</string>
     <string name="done_total">Done Total:\u0020</string>
     <string name="undone_total">Undone Total:\u0020</string>
@@ -30,5 +43,8 @@
     <string name="chart_type_0">Pie Chart</string>
     <string name="chart_type_1">Radar Chart</string>
     <string name="chart_data_0">Short Term</string>
-    <string name="chart_data_1">Long Term</string>=
+    <string name="chart_data_1">Long Term</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>=
 </resources>

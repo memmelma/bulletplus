@@ -15,9 +15,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".NewGoalShortActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:parentActivityName=".MainActivity">
-        </activity>
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="stateHidden"></activity>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop">
@@ -29,8 +28,8 @@
         </activity>
         <activity
             android:name=".NewGoalLongActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".AuthActivity"
             android:parentActivityName=".MainActivity" />

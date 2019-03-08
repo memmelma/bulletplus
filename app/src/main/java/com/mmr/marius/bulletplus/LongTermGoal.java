@@ -8,24 +8,28 @@ public class LongTermGoal {
     private static final String TAG = "com.marius.longtermgoal";
     private String title;
     private String description;
-    private String userId;
+    private String user_id;
     private Date created;
     private long category;
     private String id;
     private Boolean done;
+    private int done_count;
+    private int all_count;
 
     public LongTermGoal(){
         //needed for FireBase
     }
 
-    public LongTermGoal(String title, String description, String userId, long category){
+    public LongTermGoal(String title, String description, String user_id, long category){
         this.title = title;
         this.description = description;
-        this.userId = userId;
+        this.user_id = user_id;
         this.created = new Date();
         this.category = category;
         this.done = false;
-        this.id = md5(this.title + this.description + this.userId + this.created + this.category);
+        this.id = md5(this.title + this.description + this.user_id + this.created + this.category);
+        this.done_count = 0;
+        this.all_count = 0;
     }
 
     public String getTitle() {
@@ -36,8 +40,8 @@ public class LongTermGoal {
         return description;
     }
 
-    public String getUserId(){
-        return userId;
+    public String getUser_id(){
+        return user_id;
     }
 
     public Date getCreated() {
@@ -54,6 +58,14 @@ public class LongTermGoal {
 
     public String getId(){
         return id;
+    }
+
+    public int getDone_count(){
+        return done_count;
+    }
+
+    public int getAll_count(){
+        return all_count;
     }
 
     public String md5(String s) {

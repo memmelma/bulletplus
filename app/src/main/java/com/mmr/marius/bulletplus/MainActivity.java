@@ -2,7 +2,6 @@ package com.mmr.marius.bulletplus;
 
 import android.content.Intent;
 import android.os.PersistableBundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -25,16 +24,8 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.Collection;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,16 +47,9 @@ public class MainActivity extends AppCompatActivity {
     public final static String TAG = "com.marius.main";
     private final static int REQUEST_CODE_LOAD = 42;
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-    private GoalAdapterLongTerm mAdapterLongTerm;
-    private GoalAdapterShortTerm mAdapterShortTerm;
-
     private PrefSingleton mPrefSingleton;
 
     private int tabPosition = 0;
-
-    private View rootView;
 
     private boolean first = true;
 
@@ -104,21 +88,31 @@ public class MainActivity extends AppCompatActivity {
             first = false;
         }
 
-
         final View rootView = findViewById(R.id.main_content);
 
-        TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
-        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.getTabAt(0).setText(R.string.short_term_goal);
+        tabLayout.getTabAt(1).setText(R.string.long_term_goal);
+        tabLayout.getTabAt(2).setText(R.string.final_goal);
+        tabLayout.getTabAt(3).setText(R.string.statistics);
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 tabPosition = tab.getPosition();
 
-                FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.button_add);
+                FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.button_fab);
+
+                Log.i(TAG, "tab selected " + tabPosition);
 
                 if(tabPosition == 2){
+                    fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings));
+                }
+                else if(tabPosition == 3){
                     Charts.fetchAndUpdate(rootView, new FireBaseHandler().getUserID());
                     fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_sync));
-                } else {
+                }
+
+                else {
                     fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_add));
                 }
             }
@@ -134,25 +128,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton mButtonAddNote = findViewById(R.id.button_add);
+        FloatingActionButton mButtonAddNote = findViewById(R.id.button_fab);
         mButtonAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                //Log.i(TAG, "clicked tabPos " + tabPosition);
-
                 switch (tabPosition){
                     case 0:
-                        //0 short term, 1 long term
                         startActivity(new Intent(MainActivity.this, NewGoalShortActivity.class));
                         break;
                     case 1:
-                        Intent i = new Intent(MainActivity.this, NewGoalLongActivity.class);
-                        i.putExtra(TAG, tabPosition);
-                        startActivity(i);
+                        startActivity(new Intent(MainActivity.this, NewGoalLongActivity.class));
+                        break;
                     case 2:
+                        break;
+                    case 3:
                         String uid = new FireBaseHandler().getUserID();
                         Charts.fetchAndUpdate(rootView, uid);
+                        break;
+
                 }
 
             }
@@ -193,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
     private void signOut(){
         FirebaseAuth.getInstance().signOut();
         mPrefSingleton.clear();
-        Toast.makeText(MainActivity.this, "Logged out",
+        Toast.makeText(MainActivity.this, getResources().getString(R.string.logged_out),
                 Toast.LENGTH_SHORT).show();
         startActivity(new Intent(MainActivity.this, LoadingActivity.class));
     }
@@ -275,14 +269,8 @@ public class MainActivity extends AppCompatActivity {
                     rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
                     mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
-                    //Firestore RecyclerView doesn't accept where statements for live bound data -> reorganized database
-                    //query = new FireBaseHandler().getShortTermGoalsUndone(uid)
-                    //        .orderBy("created", Query.Direction.ASCENDING);
-
-                    //
-
                     query = new FireBaseHandler().getShortTermGoals()
-                            .whereEqualTo("userId", uid)
+                            .whereEqualTo("user_id", uid)
                             .whereEqualTo("done", false)
                             .orderBy("created", Query.Direction.ASCENDING);
 
@@ -305,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
                     mRecyclerView= (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
                     query = new FireBaseHandler().getLongTermGoals()
-                            .whereEqualTo("userId", uid)
+                            .whereEqualTo("user_id", uid)
                             .whereEqualTo("done", false)
                             .orderBy("created", Query.Direction.ASCENDING);
 
@@ -322,7 +310,11 @@ public class MainActivity extends AppCompatActivity {
                     mAdapterLongTerm.startListening();
                     break;
 
-                case 3: //Statistics
+                case 3:
+                    rootView = inflater.inflate(R.layout.fragment_final_goal, container, false);
+                    break;
+
+                case 4: //Statistics
                     rootView = inflater.inflate(R.layout.fragment_statistic, container, false);
 
                     RadioGroup radioGroupType = (RadioGroup) rootView.findViewById(R.id.radioGroupChart0);
@@ -370,7 +362,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 4;
         }
     }
 

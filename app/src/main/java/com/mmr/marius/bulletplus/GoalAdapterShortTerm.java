@@ -3,15 +3,8 @@ package com.mmr.marius.bulletplus;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.SpannableString;
-import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +16,6 @@ import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal, GoalAdapterShortTerm.GoalHolder> {
 
@@ -55,7 +45,7 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
         viewBinderHelper.bind(holder.mSwipeRevealLayout, doc_id);
 
         holder.mTextViewTitle.setText(model.getTitle());
-        holder.mTextViewDescription.setText("Engine: " + model.getLong_term_goal_Title());
+        holder.mTextViewDescription.setText(String.format(mActivity.getResources().getString(R.string.short_term_goal_description), mActivity.getResources().getString(R.string.short_term_goal), model.getLong_term_goal_title()));
 
         //holder.mTextViewCreated.setText(new SimpleDateFormat("yyyy-MM-dd").format(model.getCreated()));
 
@@ -77,7 +67,7 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
         holder.mImageButtonDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fbh.setDoneShortTermGoal(doc_id);
+                fbh.setDoneShortTermGoal(doc_id, model.getLong_term_goal_id());
             }
         });
 
@@ -86,15 +76,15 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
             public void onClick(View v) {
                 AlertDialog dialog = new AlertDialog
                         .Builder(mActivity)
-                        .setMessage("You are about to set this goal to done!")
-                        .setTitle("Attention")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        .setMessage(String.format(mActivity.getResources().getString(R.string.delete_prompt), mActivity.getResources().getString(R.string.short_term_goal)))
+                        .setTitle(mActivity.getResources().getString(R.string.delete_title))
+                        .setPositiveButton(mActivity.getResources().getString(R.string.delete_ok), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                fbh.rmShortTermGoal(doc_id);
+                                fbh.rmShortTermGoal(doc_id, model.getLong_term_goal_id());
                             }
                         })
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        .setNegativeButton(mActivity.getResources().getString(R.string.delete_cancel), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 

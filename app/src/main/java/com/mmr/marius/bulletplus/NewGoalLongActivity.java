@@ -29,6 +29,7 @@ public class NewGoalLongActivity extends AppCompatActivity {
         //setTitle("Add " + type + " goal");
 
         mEditTextGoal = (EditText) findViewById(R.id.edit_goal_title);
+        mEditTextGoal.setHint(String.format(getResources().getString(R.string.new_goal_hint), getResources().getString(R.string.long_term_goal)));
         mEditTextDescription = (EditText) findViewById(R.id.edit_goal_description);
         mRadioGroup = (RadioGroup) findViewById(R.id.radioGroupCategories);
 

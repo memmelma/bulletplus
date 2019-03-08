@@ -1,25 +1,25 @@
 package com.mmr.marius.bulletplus;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.SuccessContinuation;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.reflect.Array;
+import javax.annotation.Nullable;
 
 public class FireBaseHandler {
     private final static String TAG = "com.marius.fbhandler";
@@ -35,10 +35,10 @@ public class FireBaseHandler {
     public void addShortTermGoal(ShortTermGoal stg){
         getCollectionReference(short_term_collection).add(stg);
 
-        getCollectionReference(long_term_collection).whereEqualTo("id", stg.getLong_term_goal_Id());
+        incrementAllCount(stg.getLong_term_goal_id());
     }
 
-    public void rmShortTermGoal(String goalId){
+    public void rmShortTermGoal(String goalId, String long_term_goal_id){
         getCollectionReference(short_term_collection).document(goalId).delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -52,9 +52,10 @@ public class FireBaseHandler {
                         Log.w(TAG, "Error deleting document", e);
                     }
                 });
+        decrementAllCount(long_term_goal_id);
     }
 
-    public void setDoneShortTermGoal(String goalId){
+    public void setDoneShortTermGoal(String goalId, String long_term_goal_id){
         getCollectionReference(short_term_collection).document(goalId).update("done", true)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -68,6 +69,8 @@ public class FireBaseHandler {
                         Log.w(TAG, "Error deleting document", e);
                     }
                 });
+
+        incrementDoneCount(long_term_goal_id);
     }
 
     public CollectionReference getShortTermGoals(){
@@ -129,6 +132,36 @@ public class FireBaseHandler {
                 .build();
         FirebaseFirestore.getInstance().setFirestoreSettings(settings);
         return FirebaseFirestore.getInstance().collection(collectionName);
+    }
+
+    private void incrementDoneCount(String long_term_goal_id){
+        final DocumentReference dr = getCollectionReference(long_term_collection).document(long_term_goal_id);
+        dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                dr.update("done_count", (long) task.getResult().get("done_count") + 1);
+            }
+        });
+    }
+
+    private void incrementAllCount(String long_term_goal_id){
+        final DocumentReference dr = getCollectionReference(long_term_collection).document(long_term_goal_id);
+        dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                dr.update("all_count", (long) task.getResult().get("all_count") + 1);
+            }
+        });
+    }
+
+    private void decrementAllCount(String long_term_goal_id){
+        final DocumentReference dr = getCollectionReference(long_term_collection).document(long_term_goal_id);
+        dr.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                dr.update("all_count", (long) task.getResult().get("all_count") - 1);
+            }
+        });
     }
 
     public Task countLongTermDone(String id){

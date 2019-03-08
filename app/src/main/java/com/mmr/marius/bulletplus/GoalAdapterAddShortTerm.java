@@ -63,13 +63,11 @@ public class GoalAdapterAddShortTerm extends FirestoreRecyclerAdapter<LongTermGo
         holder.mTextViewTitle.setText(model.getTitle());
         //holder.mTextViewCreated.setText(new SimpleDateFormat("yyyy-MM-dd").format(model.getCreated()));
 
-        final String modelId = model.getId();
         final String modelTitle = model.getTitle();
 
-        Log.i(TAG, modelId);
 
         if(mSelectionId == null){
-            mSelectionId = modelId;
+            mSelectionId = doc_id;
             mSelectionTitle = modelTitle;
         }
 
@@ -77,13 +75,13 @@ public class GoalAdapterAddShortTerm extends FirestoreRecyclerAdapter<LongTermGo
         holder.mConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSelectionId = modelId;
+                mSelectionId = doc_id;
                 mSelectionTitle = modelTitle;
                 notifyDataSetChanged();
             }
         });
 
-        if(modelId.equals(mSelectionId))
+        if(doc_id.equals(mSelectionId))
             holder.mCheckBox.setChecked(true);
         else{
             holder.mCheckBox.setChecked(false);
