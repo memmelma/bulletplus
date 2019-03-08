@@ -44,8 +44,8 @@ public class GoalAdapterAddShortTerm extends FirestoreRecyclerAdapter<LongTermGo
         this.fbh = new FireBaseHandler();
     }
 
-    String mSelectionId = null;
-    String mSelectionTitle = null;
+    private String mSelectionId = null;
+    private String mSelectionTitle = null;
 
     public String getSelectionId(){
         return mSelectionId;

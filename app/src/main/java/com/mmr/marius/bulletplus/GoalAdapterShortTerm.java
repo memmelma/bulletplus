@@ -43,9 +43,10 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
         final String doc_id = getSnapshots().getSnapshot(position).getId();
 
         viewBinderHelper.bind(holder.mSwipeRevealLayout, doc_id);
+        viewBinderHelper.setOpenOnlyOne(true);
 
         holder.mTextViewTitle.setText(model.getTitle());
-        holder.mTextViewDescription.setText(String.format(mActivity.getResources().getString(R.string.short_term_goal_description), mActivity.getResources().getString(R.string.short_term_goal), model.getLong_term_goal_title()));
+        holder.mTextViewDescription.setText(String.format(mActivity.getResources().getString(R.string.short_term_goal_description), mActivity.getResources().getString(R.string.long_term_goal), model.getLong_term_goal_title()));
 
         //holder.mTextViewCreated.setText(new SimpleDateFormat("yyyy-MM-dd").format(model.getCreated()));
 

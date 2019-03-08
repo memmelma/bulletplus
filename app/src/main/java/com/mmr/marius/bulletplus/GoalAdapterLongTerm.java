@@ -59,6 +59,7 @@ public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, 
         final String doc_id = getSnapshots().getSnapshot(position).getId();
 
         viewBinderHelper.bind(holder.mSwipeRevealLayout, doc_id);
+        viewBinderHelper.setOpenOnlyOne(true);
 
         holder.mTextViewTitle.setText(model.getTitle());
         holder.mTextViewDescription.setText(model.getDescription());
@@ -115,10 +116,6 @@ public class GoalAdapterLongTerm extends FirestoreRecyclerAdapter<LongTermGoal, 
                 dialog.show();
             }
         });
-
-        //Log.i(TAG, fbh.countLongTermDone(model.getId()) + "");
-
-        //holder.mTextViewDescription.set
     }
 
     @NonNull

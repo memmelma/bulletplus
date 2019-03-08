@@ -2,8 +2,10 @@ package com.mmr.marius.bulletplus;
 
 import android.content.Intent;
 import android.os.PersistableBundle;
+import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.Query;
@@ -98,11 +101,10 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+
                 tabPosition = tab.getPosition();
 
                 FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.button_fab);
-
-                Log.i(TAG, "tab selected " + tabPosition);
 
                 if(tabPosition == 2){
                     fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_settings));
@@ -124,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
+                
             }
         });
 
@@ -361,7 +363,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
+            // Show 4 total pages.
             return 4;
         }
     }
