@@ -45,9 +45,14 @@ public class GoalAdapterAddShortTerm extends FirestoreRecyclerAdapter<LongTermGo
     }
 
     String mSelectionId = null;
+    String mSelectionTitle = null;
 
     public String getSelectionId(){
         return mSelectionId;
+    }
+
+    public String getSelectionTitle(){
+        return mSelectionTitle;
     }
 
     @Override
@@ -59,16 +64,21 @@ public class GoalAdapterAddShortTerm extends FirestoreRecyclerAdapter<LongTermGo
         //holder.mTextViewCreated.setText(new SimpleDateFormat("yyyy-MM-dd").format(model.getCreated()));
 
         final String modelId = model.getId();
+        final String modelTitle = model.getTitle();
 
         Log.i(TAG, modelId);
 
-        if(mSelectionId == null)
+        if(mSelectionId == null){
             mSelectionId = modelId;
+            mSelectionTitle = modelTitle;
+        }
+
 
         holder.mConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mSelectionId = modelId;
+                mSelectionTitle = modelTitle;
                 notifyDataSetChanged();
             }
         });
@@ -103,9 +113,6 @@ public class GoalAdapterAddShortTerm extends FirestoreRecyclerAdapter<LongTermGo
     public GoalHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v  = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.goal_item_add_short,
                 viewGroup, false);
-
-        //CardView mCardView = v.findViewById(R.id.card_view);
-        //mCardView.setBackgroundColor(v.findViewById(R.id.card_view).getResources().getColor(R.color.colorUpperGoal));
 
         return new GoalHolder(v);
     }

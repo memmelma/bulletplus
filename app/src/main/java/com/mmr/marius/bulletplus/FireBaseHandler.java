@@ -1,17 +1,14 @@
 package com.mmr.marius.bulletplus;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.SuccessContinuation;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -20,11 +17,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
+import java.lang.reflect.Array;
 
 public class FireBaseHandler {
     private final static String TAG = "com.marius.fbhandler";
@@ -39,6 +34,8 @@ public class FireBaseHandler {
 
     public void addShortTermGoal(ShortTermGoal stg){
         getCollectionReference(short_term_collection).add(stg);
+
+        getCollectionReference(long_term_collection).whereEqualTo("id", stg.getLong_term_goal_Id());
     }
 
     public void rmShortTermGoal(String goalId){
@@ -133,7 +130,27 @@ public class FireBaseHandler {
         FirebaseFirestore.getInstance().setFirestoreSettings(settings);
         return FirebaseFirestore.getInstance().collection(collectionName);
     }
-/*
+
+    public Task countLongTermDone(String id){
+
+        final Query query = getShortTermGoals()
+                .whereEqualTo("userId", getUserID())
+                .whereEqualTo("long_term_goal_Id", id)
+                .whereEqualTo("done", true);
+
+        return query.get();
+    }
+
+    public int countLongTermTotal(String id){
+
+        Query query = getShortTermGoals()
+                .whereEqualTo("userId", getUserID())
+                .whereEqualTo("long_term_goal_Id", id);
+
+        return query.get().getResult().size();
+    }
+
+    //helper
     public void moveDocument(final DocumentReference fromPath, final DocumentReference toPath) {
         fromPath.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -176,5 +193,5 @@ public class FireBaseHandler {
             }
         });
     }
-*/
+
 }

@@ -4,9 +4,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +55,8 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
         viewBinderHelper.bind(holder.mSwipeRevealLayout, doc_id);
 
         holder.mTextViewTitle.setText(model.getTitle());
+        holder.mTextViewDescription.setText("Engine: " + model.getLong_term_goal_Title());
+
         //holder.mTextViewCreated.setText(new SimpleDateFormat("yyyy-MM-dd").format(model.getCreated()));
 
         switch ((int) model.getCategory()){
@@ -122,7 +128,7 @@ public class GoalAdapterShortTerm extends FirestoreRecyclerAdapter<ShortTermGoal
         public GoalHolder(View v) {
             super(v);
             mTextViewTitle = (TextView) v.findViewById(R.id.text_view_title);
-            mTextViewDescription = (TextView) v.findViewById(R.id.text_view_title);
+            mTextViewDescription = (TextView) v.findViewById(R.id.text_view_description);
             mTextViewDetail = v.findViewById(R.id.text_view_detail);
             mImageViewCategory = (ImageView) v.findViewById(R.id.imageViewCategory);
             mSwipeRevealLayout = (SwipeRevealLayout) v.findViewById(R.id.swipeRevealLayout);

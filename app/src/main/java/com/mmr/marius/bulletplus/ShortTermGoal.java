@@ -8,6 +8,7 @@ public class ShortTermGoal {
 
     private String title;
     private String long_term_goal_Id;
+    private String long_term_goal_Title;
     private String userId;
     private Date created;
     private long category;
@@ -18,12 +19,13 @@ public class ShortTermGoal {
         //needed for FireBase
     }
 
-    public ShortTermGoal(String title, String userId, String long_term_goal_Id, long category){
+    public ShortTermGoal(String title, String userId, String long_term_goal_Id, String long_term_goal_Title, long category){
         this.title = title;
         this.userId = userId;
         this.created = new Date();
         this.category = category;
         this.long_term_goal_Id = long_term_goal_Id;
+        this.long_term_goal_Title = long_term_goal_Title;
         this.done = false;
     }
 
@@ -45,6 +47,10 @@ public class ShortTermGoal {
 
     public String getLong_term_goal_Id() {
         return long_term_goal_Id;
+    }
+
+    public String getLong_term_goal_Title() {
+        return long_term_goal_Title;
     }
 
     public Boolean getDone(){

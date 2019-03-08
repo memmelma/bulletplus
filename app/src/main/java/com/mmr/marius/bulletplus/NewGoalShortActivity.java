@@ -107,6 +107,7 @@ public class NewGoalShortActivity extends AppCompatActivity {
         String goalTitle = mEditTextGoal.getText().toString();
 
         String longTermGoalId = goalAdapterAddShortTerm.getSelectionId();
+        String longTermGoalTitle = goalAdapterAddShortTerm.getSelectionTitle();
 
         if(goalTitle.trim().isEmpty()){
             Toast.makeText(this, "Please insert a goal",Toast.LENGTH_SHORT).show();
@@ -118,7 +119,7 @@ public class NewGoalShortActivity extends AppCompatActivity {
         FireBaseHandler fbh = new FireBaseHandler();
         String uid = fbh.getUserID();
 
-        ShortTermGoal stg = new ShortTermGoal(goalTitle, fbh.getUserID(), longTermGoalId, category);
+        ShortTermGoal stg = new ShortTermGoal(goalTitle, fbh.getUserID(), longTermGoalId, longTermGoalTitle, category);
         fbh.addShortTermGoal(stg);
         Toast.makeText(this, "short goal added", Toast.LENGTH_SHORT).show();
 
