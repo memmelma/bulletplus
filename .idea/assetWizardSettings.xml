@@ -3,6 +3,11 @@
   <component name="WizardSettings">
     <option name="children">
       <map>
+        <entry key="imageWizard">
+          <value>
+            <PersistentState />
+          </value>
+        </entry>
         <entry key="vectorWizard">
           <value>
             <PersistentState>
@@ -28,9 +33,10 @@
                         </option>
                         <option name="values">
                           <map>
+                            <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="ic_settings" />
-                            <entry key="sourceFile" value="C:\Users\Marius\Downloads\baseline-check-24px.svg" />
+                            <entry key="outputName" value="ic_space_shuttle" />
+                            <entry key="sourceFile" value="C:\Users\Marius\Downloads\space-shuttle.svg" />
                           </map>
                         </option>
                       </PersistentState>

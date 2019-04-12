@@ -1,6 +1,8 @@
 package com.mmr.marius.bulletplus;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.PersistableBundle;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
@@ -22,6 +24,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -29,6 +33,12 @@ import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.Query;
+
+import org.qap.ctimelineview.TimelineRow;
+import org.qap.ctimelineview.TimelineViewAdapter;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -315,6 +325,8 @@ public class MainActivity extends AppCompatActivity {
 
                 case 3:
                     rootView = inflater.inflate(R.layout.fragment_final_goal, container, false);
+
+                    FinalGoal.setup(rootView);
                     break;
 
                 case 4: //Statistics

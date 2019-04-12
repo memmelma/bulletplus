@@ -179,6 +179,15 @@ public class FireBaseHandler {
         return query.get();
     }
 
+    public Task getLongTermGoalDone(){
+
+        final Query query = getShortTermGoals()
+                .whereEqualTo("userId", getUserID())
+                .whereEqualTo("done", true);
+
+        return query.get();
+    }
+
     public int countLongTermTotal(String id){
 
         Query query = getShortTermGoals()

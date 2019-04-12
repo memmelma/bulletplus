@@ -1,12 +1,22 @@
 package com.mmr.marius.bulletplus;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import org.qap.ctimelineview.TimelineRow;
+import org.qap.ctimelineview.TimelineViewAdapter;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 
 /**
@@ -58,6 +68,7 @@ public class FinalGoalFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
