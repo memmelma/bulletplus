@@ -28,11 +28,6 @@ public class AuthActivity extends AppCompatActivity {
     private Button mEmailSignInButton;
     private Button mEmailRegisterButton;
 
-    private PrefSingleton mPrefSingleton;
-    //private SharedPreferences loginDetails;
-    //private SharedPreferences.Editor loginDetailsEditor;
-    //private Boolean saveLogin //checkbox
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,8 +35,6 @@ public class AuthActivity extends AppCompatActivity {
 
         //ActionBar actionBar = getSupportActionBar();
         //actionBar.hide();
-
-        mPrefSingleton = PrefSingleton.getInstance();
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -58,11 +51,6 @@ public class AuthActivity extends AppCompatActivity {
                 Log.i(TAG, "." + email + "." + " - " + password);
 
                 if(!email.matches("") && !password.matches("")){
-                    mPrefSingleton.writePreference("email", email);
-                    mPrefSingleton.writePreference("password", password);
-
-                    Log.i(TAG, email + " - " + password);
-
                     signIn(email, password);
                 }
                 else {
@@ -81,13 +69,6 @@ public class AuthActivity extends AppCompatActivity {
             }
         });
 
-        String email = mPrefSingleton.getPreference("email");
-        String password = mPrefSingleton.getPreference("password");
-
-        if(email != "" && password != ""){
-            signIn(email,password);
-        }
-
     }
 
     private void signIn(String email, String password){
@@ -98,12 +79,11 @@ public class AuthActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
-                            //FirebaseUser user = mAuth.getCurrentUser();
+
                             Toast.makeText(AuthActivity.this, "Authentication success.",
                                     Toast.LENGTH_SHORT).show();
 
                             Intent resultIntent = new Intent();
-                            //resultIntent.putExtra("email", email);
                             setResult(Activity.RESULT_OK, resultIntent);
 
                             finish();

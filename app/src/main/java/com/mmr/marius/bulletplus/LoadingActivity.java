@@ -25,7 +25,6 @@ public class LoadingActivity extends AppCompatActivity {
     private final static String TAG = "com.marius.loading";
 
     private FirebaseAuth mAuth;
-    private PrefSingleton mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,30 +34,8 @@ public class LoadingActivity extends AppCompatActivity {
         //ActionBar actionBar = getSupportActionBar();
         //actionBar.hide();
 
-        ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
-
-        if(isConnected) {
-            mAuth = FirebaseAuth.getInstance();
-
-            mSharedPreferences = PrefSingleton.getInstance();
-            String email = mSharedPreferences.getPreference("email");
-            String password = mSharedPreferences.getPreference("password");
-
-            //Log.i(TAG, email + password);
-
-            if (email != "" && password != "" && email != null && password != null)
-                signIn(email, password);
-            else {
-                Intent i = new Intent(LoadingActivity.this, AuthActivity.class);
-                startActivityForResult(i, REQUEST_CODE_SIGN_IN);
-            }
-        }else{
-            finish();
-        }
+        Intent i = new Intent(LoadingActivity.this, AuthActivity.class);
+        startActivityForResult(i, REQUEST_CODE_SIGN_IN);
     }
 
     @Override

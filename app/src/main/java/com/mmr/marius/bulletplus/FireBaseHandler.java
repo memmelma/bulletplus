@@ -118,8 +118,13 @@ public class FireBaseHandler {
     }
 
     public FirebaseUser getUser(){
-        FirebaseUser u = mAuth.getCurrentUser();
-        return mAuth.getCurrentUser();
+        try{
+            FirebaseUser u = mAuth.getCurrentUser();
+            return mAuth.getCurrentUser();
+        }catch(Exception e){
+            return null;
+        }
+
     }
 
     public String getUserID(){

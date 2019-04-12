@@ -50,16 +50,19 @@ public class MainActivity extends AppCompatActivity {
     public final static String TAG = "com.marius.main";
     private final static int REQUEST_CODE_LOAD = 42;
 
-    private PrefSingleton mPrefSingleton;
-
     private int tabPosition = 0;
-
-    private boolean first = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(new FireBaseHandler().getUser() == null){
+            Intent i = new Intent(MainActivity.this, LoadingActivity.class);
+            startActivityForResult(i, REQUEST_CODE_LOAD);
+        }else{
+            setup();
+        }
 
         /*
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -69,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
         actionBar.hide();
         */
 
+    }
+
+    private void setup(){
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -82,14 +88,7 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
-        PrefSingleton.getInstance().Initialize(getApplicationContext());
-        mPrefSingleton = PrefSingleton.getInstance();
 
-        if(savedInstanceState == null || savedInstanceState.getBoolean("first")){
-            Intent i = new Intent(MainActivity.this, LoadingActivity.class);
-            startActivityForResult(i, REQUEST_CODE_LOAD);
-            first = false;
-        }
 
         final View rootView = findViewById(R.id.main_content);
 
@@ -126,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                
+
             }
         });
 
@@ -180,15 +179,17 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /*
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         outState.putBoolean("first", first);
         super.onSaveInstanceState(outState, outPersistentState);
     }
+    */
 
     private void signOut(){
         FirebaseAuth.getInstance().signOut();
-        mPrefSingleton.clear();
+        //mPrefSingleton.clear();
         Toast.makeText(MainActivity.this, getResources().getString(R.string.logged_out),
                 Toast.LENGTH_SHORT).show();
         startActivity(new Intent(MainActivity.this, LoadingActivity.class));
@@ -372,7 +373,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(requestCode) {
             case REQUEST_CODE_LOAD:
-                //Log.i(TAG, "returned from loading");
+                setup();
                 //use data.getExtra(...) to retrieve the returned data
                 break;
         }
